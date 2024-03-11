@@ -1,8 +1,7 @@
 import { lazy } from 'react';
 const Dashboard = lazy(() => import('../Dashboard'));
-const Home = lazy(() => import('../Home'));
-const About = lazy(() => import('../About/Loadable'));
-const Contact = lazy(() => import('../Contact'));
+const LoyaltyTags = lazy(() => import('../LoyaltyTags'));
+const ExtFields = lazy(() => import('../ExtFields'));
 
 const routes = [
   {
@@ -11,20 +10,14 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: `/home`,
-    component: Home,
-    routes: [
-      {
-        exact: true,
-        path: `/home/about`,
-        component: About,
-      },
-      {
-        exact: true,
-        path: `/home/contact`,
-        component: Contact,
-      },
-    ],
+    path: `/tags`,
+    exact: true,
+    component: LoyaltyTags,
+  },
+  {
+    path: `/extFields`,
+    exact: true,
+    component: ExtFields,
   },
   {
     exact: true,

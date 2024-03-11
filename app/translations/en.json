@@ -1,12 +1,4 @@
 {
-  "loyalty.app.components.pages.AccessForbidden.forbiddenDesc": "This page access has not been provided to you.",
-  "loyalty.app.components.pages.AccessForbidden.forbiddenHeader": "Access Forbidden",
-  "loyaltyPlus.components.pages.About.header": "This is the About component!",
-  "loyaltyPlus.components.pages.Contact.header": "This is the Contact component!",
-  "loyaltyPlus.components.pages.WithCustomAuthAndTranslations.authenticating": "Authenticating...",
-  "loyaltyPlus.components.pages.WithCustomAuthAndTranslations.header": "This is the WithCustomAuthAndTranslations component!",
-  "loyaltyPlus.components.pages.WithCustomAuthAndTranslations.unauthorized": "You are not authorized to view this",
-  "yourApp.components.containers.NotFoundPage.header": "Looks like you are lost!",
   "yourApp.components.molecules.EmptyStateIllustration.nothingConfigured": "Nothing configured till now",
   "yourApp.components.molecules.EmptyStateIllustration.nothingConfiguredDesc": "Looks like there is no data available for this program. If you think this is an error, please contact support",
   "yourApp.components.organisms.NavigationBar.logout": "Logout",
@@ -152,8 +144,5 @@
   "yourApp.components.pages.Login.loginPage": "Login Page",
   "yourApp.components.pages.Login.password": "Password",
   "yourApp.components.pages.Login.signIn": "Sign In!",
-  "yourApp.components.pages.Login.userName": "User name",
-  "yourApp.components.pages.SomethingWentWrong.somethingWentWrongDesc": "Please try again. If this issue occurs again, please reach out to Capillary support team.",
-  "yourApp.components.pages.SomethingWentWrong.somethingWentWrongTitle": "Sorry, something went wrong.",
-  "yourApp.components.pages.SomethingWentWrong.tryRefreshing": "Try refreshing again"
+  "yourApp.components.pages.Login.userName": "User name"
 }

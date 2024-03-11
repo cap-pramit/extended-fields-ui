@@ -9,10 +9,12 @@ const enviromentEndpoints = {
   development: {
     auth_endpoint: 'https://dev.intouch.capillarytech.com/arya/api/v1/auth',
     arya_endpoint: 'https://dev.intouch.capillarytech.com/arya/api/v1',
+    vulcan_api_endpoint: 'https://dev.intouch.capillarytech.com/vulcan/api/v1',
   },
   production: {
     auth_endpoint: '/arya/api/v1/auth',
     arya_endpoint: '/arya/api/v1',
+    vulcan_api_endpoint: '/vulcan/api/v1',
   }
 }
 

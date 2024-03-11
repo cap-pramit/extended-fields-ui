@@ -259,7 +259,7 @@ module.exports = options => ({
       exposes: {
         // which exposes
         // ADD MFE COMPONENT YOU WANT TO EXPORT
-        './XajaHome': '/app/components/pages/Home',
+        // './XajaHome': '/app/components/pages/Home',
       },
       shared: {
         // and shared
