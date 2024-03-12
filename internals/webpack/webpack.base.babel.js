@@ -259,7 +259,8 @@ module.exports = options => ({
       exposes: {
         // which exposes
         // ADD MFE COMPONENT YOU WANT TO EXPORT
-        // './XajaHome': '/app/components/pages/Home',
+        './LoyaltyTagsPage': '/app/components/pages/LoyaltyTags',
+        './ExtendedFieldsPage': '/app/components/pages/ExtFields',
       },
       shared: {
         // and shared
