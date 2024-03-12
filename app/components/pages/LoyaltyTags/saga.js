@@ -5,10 +5,10 @@ import { actionTypes } from './constants';
 export function* getLoyaltyTags() {
   try {
     const response = yield call(Api.getLoyaltyTags);
-    if (response.response) {
+    if (response.success) {
       yield put({
         type: actionTypes.GET_LOYALTY_TAGS_SUCCESS,
-        data: response.response,
+        data: response.result?.listitem,
       });
     } else {
       yield put({

@@ -66,11 +66,7 @@ export const getUserData = () => {
 };
 
 export const getLoyaltyTags = () => {
-  const actionType = 'PE_EMAIL_ACTION';
-  const programId = '622';
-  const orgId = 1231;
-  const userId = 4;
-  const url = `${VULCAN_API_ENDPOINT}/xaja/AjaxService/program/get_loyalty_tags.json?ajax_params_1=service_call&ajax_params_2=${orgId}&ajax_params_3=${userId}&type=null&org_id=${orgId}&action_type=${actionType}&programId=${programId}`;
+  const url = `${VULCAN_API_ENDPOINT}/xaja/AjaxService/campaign_v2/get_campaign_data.json?ajax_params_1=Live&ajax_params_2=all&ajax_params_3=0&ajax_params_4=20`;
   return httpRequest(url, getAPICallObject('GET', undefined, undefined, {
     headers: {
       'x-cap-vulcan-app-id': 'de937dd5e20986b06c53fb01',

@@ -23,22 +23,49 @@ const LoyaltyTags = ({
     actions.getLoyaltyTags();
   }, []);
 
-  const getColumns = () => ([{
-    title: (
-      <CapHeading type="h3">
-        Loyalty Tags Name
-      </CapHeading>
-    ),
-    key: 'loyaltyTagsName',
-    width: '22.5%',
-    render: (text, record) => record.name,
-  }]);
+  const getColumns = () => ([
+    {
+      title: (
+        <CapHeading type="h3">
+          Campaign Id
+        </CapHeading>
+      ),
+      key: 'campaignId',
+      width: '22.5%',
+      render: (text, record) => record.id,
+    },
+    {
+      title: (
+        <CapHeading type="h3">
+          Campaign Name
+        </CapHeading>
+      ),
+      key: 'campaignName',
+      width: '22.5%',
+      render: (text, record) => record.name,
+    },
+    {
+      title: (
+        <CapHeading type="h3">
+          Campaign Type
+        </CapHeading>
+      ),
+      key: 'campaignType',
+      width: '22.5%',
+      render: (text, record) => record.type,
+    },
+  ]);
   const columns = React.useMemo(() => getColumns(), [
     loyaltyTags,
   ]);
 
   const getLoyaltyTagsData = () =>
-    (Object.entries(loyaltyTags) || []).map(([key, value]) => ({ name: value?.name }));
+    (Object.entries(loyaltyTags) || [])
+      .map(([key, value]) => ({
+        name: value?.campaign_name,
+        id: value?.campaign_id,
+        type: value?.campaign_type
+      }));
 
 
   const data = React.useMemo(() => getLoyaltyTagsData(), [loyaltyTags]);
