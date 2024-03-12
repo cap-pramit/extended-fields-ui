@@ -23,26 +23,38 @@ const ExtFields = ({
     actions.getExtendedFields();
   }, []);
 
-  const getColumns = () => ([{
-    title: (
-      <CapHeading type="h3">
-        Extended Field Name
-      </CapHeading>
-    ),
-    key: 'extendedFieldName',
-    width: '22.5%',
-    render: (text, record) => record.label,
-  }]);
+  const getColumns = () => ([
+    {
+      title: (
+        <CapHeading type="h3">
+          Extended Field Name
+        </CapHeading>
+      ),
+      key: 'extendedFieldName',
+      width: '22.5%',
+      render: (text, record) => record.label,
+    },
+    {
+      title: (
+        <CapHeading type="h3">
+          Data type
+        </CapHeading>
+      ),
+      key: 'dataType',
+      width: '22.5%',
+      render: (text, record) => record.length || 0,
+    },
+  ]);
 
   const columns = React.useMemo(() => getColumns(), [
     extendedFields,
   ]);
-  const getExtendedFieldsData = () => extendedFields?.['customer']?.map(field => ({ label: field.label }));
+  const getExtendedFieldsData = () => extendedFields?.['customer']?.map(field => ({ label: field.label, length: field.dataType }));
   const data = React.useMemo(() => getExtendedFieldsData(), [extendedFields]);
 
   return (
     <div className={className}>
-      <h1>Extended Fields</h1>
+      <h1>Extended Fields with Datatype</h1>
       <CapTable
         columns={columns}
         dataSource={data}
