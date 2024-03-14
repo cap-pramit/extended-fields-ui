@@ -1,8 +1,5 @@
 import { apiCaller } from '@capillarytech/vulcan-react-sdk/utils';
-import { removeAuthenticationDetais } from '../utils/authWrapper';
 import endpoints from '../config/endpoints';
-import { publicPath } from '../config/path';
-import { LOGIN_URL } from '../config/constants';
 import * as requestConstructor from './requestConstructor';
 
 const { getAPICallObject } = requestConstructor;
@@ -12,6 +9,7 @@ const ARYA_API_ENDPOINT = endpoints.arya_endpoint;
 const VULCAN_API_ENDPOINT = endpoints.vulcan_api_endpoint;
 
 function redirectIfUnauthenticated(response) {
+  const { removeAuthenticationDetais } = require('../utils/authWrapper');
   const isUnauthorized = response.status === 401;
   const isLoginPage = window.location.pathname.indexOf('/login') !== -1;
   const isAuthUserCall =
