@@ -8,7 +8,7 @@ export function* getExtendedFields() {
     if (response.success) {
       yield put({
         type: actionTypes.GET_EXTENDED_FIELDS_SUCCESS,
-        data: response.entity,
+        data: response?.result?.entity,
       });
     } else {
       yield put({
