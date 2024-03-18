@@ -44,16 +44,16 @@ const LoyaltyTags = ({
       width: '22.5%',
       render: (text, record) => record.name,
     },
-    {
-      title: (
-        <CapHeading type="h3">
-          Campaign Type
-        </CapHeading>
-      ),
-      key: 'campaignType',
-      width: '22.5%',
-      render: (text, record) => record.type,
-    },
+    // {
+    //   title: (
+    //     <CapHeading type="h3">
+    //       Campaign Type
+    //     </CapHeading>
+    //   ),
+    //   key: 'campaignType',
+    //   width: '22.5%',
+    //   render: (text, record) => record.type,
+    // },
   ]);
   const columns = React.useMemo(() => getColumns(), [
     loyaltyTags,
@@ -72,7 +72,7 @@ const LoyaltyTags = ({
 
   return (
     <div className={className}>
-      <h1>Loyalty Tags</h1>
+      <h1>Campaigns</h1>
       <CapTable
         columns={columns}
         dataSource={data}

@@ -1,8 +1,4 @@
 import get from 'lodash/get';
-import * as authWrapper from '../utils/authWrapper';
-
-const { getAuthenticationDetails } = authWrapper;
-
 const isProd = process.env.NODE_ENV === 'production';
 
 export function getAPICallObject(
@@ -11,6 +7,8 @@ export function getAPICallObject(
   isFileUpload = false,
   apiConfigs,
 ) {
+  const { getAuthenticationDetails } = require('../utils/authWrapper');
+
   const { token, orgID, user, ouId } = getAuthenticationDetails();
   let headers;
   if (isFileUpload) {
@@ -21,7 +19,7 @@ export function getAPICallObject(
     };
   }
 
-  if (isProd){
+  if (isProd) {
     headers['x-cap-vulcan-api'] = true;
   }
 
