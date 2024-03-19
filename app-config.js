@@ -16,9 +16,9 @@ module.exports = {
     "defaultLocale": null
   },
   "gtm": {
-    "useGTM": false,
+    "useGTM": true,
     "trackingId": null,
-    "projectId": null
+    "projectId": 'GTM-NGLVR5C'
   },
   "useNavigationComponent": false
 };

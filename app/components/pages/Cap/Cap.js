@@ -29,6 +29,7 @@ import * as constants from './constants';
 import * as appConstants from '../App/constants';
 import * as selectors from './selectors';
 import messages from './messages';
+import { pushDataToGTM } from '../../../utils/commonUtils';
 
 const { REQUEST, SUCCESS, FAILURE } = appConstants;
 const { publicPath } = path;
@@ -101,6 +102,7 @@ export const Cap = ({
       if (orgID !== undefined) {
         gtm.push({ orgID });
       }
+      pushDataToGTM('vulcan-page-load', { page: 'Dashboard' }, userData);
     },
     [refID, orgID],
   );

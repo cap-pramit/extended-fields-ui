@@ -61,12 +61,10 @@ const validationRules = [
         name: 'GTM Config',
         validate: () => {
             if (appConfig.gtm.useGTM) {
-                if (!appConfig.gtm.trackingId) {
-                    exitWithHint(ERROR_MESSAGES.MISSING_GTM_TRACKING_ID);
-                } else if (!appConfig.gtm.projectId) {
+                if (!appConfig.gtm.projectId) {
                     exitWithHint(ERROR_MESSAGES.MISSING_GTM_PROJECT_ID);
                 } else {
-                    console.log(chalk.green("app-config.js validation: you have opted to use Google Tag Manager and project Id and Tracking Id is provided. ✅"));
+                    console.log(chalk.green("app-config.js validation: you have opted to use Google Tag Manager and project Id is provided. ✅"));
                 }
             } else {
                 console.log(chalk.green("app-config.js validation: you have not opted to use Google Tag Manager. ✅"));

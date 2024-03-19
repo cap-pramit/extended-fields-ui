@@ -12,10 +12,8 @@ import { localStorageApi } from '@capillarytech/vulcan-react-sdk/utils';
 import { NotFoundPage } from '@capillarytech/vulcan-react-sdk/components';
 import RenderRoute from '../../atoms/RenderRoute';
 import appConfig from '../../../../app-config';
-import { gtmInitializer } from '@capillarytech/vulcan-react-sdk/utils';
 import messages from './messages';
 import styles from './style';
-import * as path from '../../../config/path';
 import * as constants from './constants';
 import componentRoutes from '../../pages/App/routes'
 
@@ -44,19 +42,6 @@ export const NavigationBar = ({
       })),
     [topbarMenuData],
   );
-
-  const pushDataToGTM = (eventType, eventObject = {}) => {
-    if (gtmConfig.useGTM) {
-      if (eventType !== '' || eventType !== undefined) {
-        const gtmInstance = gtmInitializer({
-          gtmTrackingId: gtmConfig.trackingId,
-          appName: appConfig.appName,
-          userDetails: userData
-        });
-        gtmInstance.push(eventType, eventObject);
-      }
-    }
-  };
 
   const getDropdownMenu = () => [
     {
