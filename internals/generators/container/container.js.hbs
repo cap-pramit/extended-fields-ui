@@ -1,0 +1,93 @@
+/**
+ *
+ * {{properCase name }}
+ *
+ */
+
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+{{#if wantHeaders}}
+import { Helmet } from 'react-helmet';
+{{/if}}
+{{#if wantMessages}}
+import { FormattedMessage } from 'react-intl';
+{{/if}}
+{{#if wantActionsAndReducer}}
+import { createStructuredSelector } from 'reselect';
+import { compose, bindActionCreators } from 'redux';
+{{/if}}
+
+{{#if wantSaga}}
+import {injectSaga} from '@capillarytech/vulcan-react-sdk/utils';
+{{/if}}
+{{#if wantActionsAndReducer}}
+import { injectReducer, clearDataOnUnmount } from '@capillarytech/vulcan-react-sdk/utils';
+import makeSelect{{properCase name}} from './selectors';
+import * as actions from './actions';
+import reducer from './reducer';
+{{/if}}
+{{#if wantSaga}}
+import saga from './saga';
+{{/if}}
+{{#if wantMessages}}
+import messages from './messages';
+{{/if}}
+
+function {{ properCase name }}(props) {
+  {{#if wantActionsAndReducer}}
+  const {actions} = props;
+  {{/if}}
+
+  return (
+    <div>
+    {{#if wantHeaders}}
+      <Helmet>
+        <title>{{properCase name}}</title>
+        <meta name="description" content="Description of {{properCase name}}" />
+      </Helmet>
+    {{/if}}
+    {{#if wantMessages}}
+      <FormattedMessage {...messages.header} />
+    {{/if}}
+    </div>
+  );
+}
+
+{{ properCase name }}.propTypes = {};
+
+{{#if wantActionsAndReducer}}
+const mapStateToProps = createStructuredSelector({
+  {{ camelCase name }}: makeSelect{{properCase name}}(),
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch),
+  };
+};
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+//Do not remove your appName hash from here.
+const withReducer = injectReducer({ key: `${CURRENT_APP_NAME}-{{ camelCase name }}`, reducer });
+{{else}}
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+{{/if}}
+{{#if wantSaga}}
+//Do not remove your appName hash from here.
+const withSaga = injectSaga({ key: `${CURRENT_APP_NAME}-{{ camelCase name }}`, saga });
+{{/if}}
+
+export default compose(
+{{#if wantActionsAndReducer}}
+  withReducer,
+{{/if}}
+{{#if wantSaga}}
+  withSaga,
+{{/if}}
+  withConnect,
+)(clearDataOnUnmount({{ properCase name }}));
+
