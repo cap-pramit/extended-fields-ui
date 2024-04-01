@@ -1,4 +1,6 @@
 import { endpointUtil } from "@capillarytech/vulcan-react-sdk/utils";
+import { appName, appType } from "../../app-config";
+import { EXTERNAL } from '../components/pages/App/constants'
 
 /***
  * Partial endpoints (starting with /) resolve to window.location.origin as host
@@ -18,5 +20,9 @@ const enviromentEndpoints = {
   }
 }
 
-const endpoints = endpointUtil(enviromentEndpoints);
+const isPartialpathAllowed =
+  appType !== EXTERNAL &&
+  localStorage.getItem(`${appName}__isStandalone`) === 'false' &&
+  process.env.NODE_ENV === 'production';
+const endpoints = endpointUtil(enviromentEndpoints, isPartialpathAllowed);
 export default endpoints;
