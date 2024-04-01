@@ -25,7 +25,7 @@ const Login = (props) => {
     loginFailure(err);
   };
 
-  const isNativeApp = appType === 'native';
+  const isNativeApp = appType !== 'external';
   return (
     <>
       <FormattedMessage {...messages.login}>

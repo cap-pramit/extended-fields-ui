@@ -4,6 +4,6 @@
 module.exports = {
     // which exposes
     // ADD MFE COMPONENT YOU WANT TO EXPORT example:
-    './Home': './app/components/pages/Home',
+    // './Home': './app/components/pages/Home',
   };
   

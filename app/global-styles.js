@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', Arial, sans-serif;
   }
 
-  #xaja-integration-poc-container {
+  #xaja-integration-poc-new-container {
     min-height: 100%;
     min-width: 100%;
   }
@@ -28,7 +28,7 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.5em;
   }
 
-  .xaja-integration-poc-body {
+  .xaja-integration-poc-new-body {
     .ant-popover,
     .ant-select-dropdown,
     .ant-select-dropdown.ant-select-dropdown--single,
