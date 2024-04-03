@@ -144,5 +144,8 @@
   "yourApp.components.pages.Login.loginPage": "Login Page",
   "yourApp.components.pages.Login.password": "Password",
   "yourApp.components.pages.Login.signIn": "Sign In!",
-  "yourApp.components.pages.Login.userName": "User name"
+  "yourApp.components.pages.Login.userName": "User name",
+  "yourApp.components.pages.RedirectToLoginPage.header": "Redirecting to login page…",
+  "yourApp.components.pages.RedirectToLoginPage.loginAgainMessage": "For security reasons, you would have to login again.",
+  "yourApp.components.pages.RedirectToLoginPage.message": "Looks like your previous session has expired."
 }

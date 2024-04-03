@@ -61,6 +61,20 @@ const makeSelectTopbarMenuData = () =>
     return parsedMenuData;
   });
 
+const makeSelectIsoLangToLocizeLangMapping = () =>
+  createSelector(selectCapDomain, (substate = fromJS({})) => {
+    const supportedLocales = substate.get('supportedLocales')?.toJS();
+    const localeToLocizeMapping = new Map();
+
+    if (supportedLocales.length) {
+      supportedLocales.forEach(({ locale, locize_locale }) => {
+        localeToLocizeMapping.set(locale, locize_locale);
+      });
+    }
+
+    return localeToLocizeMapping;
+  });
+
 export {
   selectCapDomain,
   makeSelectOrg,
@@ -69,4 +83,5 @@ export {
   makeSelectSidebarMenuData,
   makeSelectTopbarMenuData,
   makeSelectGlobal,
+  makeSelectIsoLangToLocizeLangMapping,
 };

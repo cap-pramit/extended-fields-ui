@@ -11,8 +11,7 @@ import messages from './messages';
 import { userIsNotAuthenticated } from '../../../utils/authWrapper';
 import { appType } from '../../../../app-config';
 import PageTemplate from '../../templates/PageTemplate';
-
-const AUTH_URL = endpoints.auth_endpoint + '/login';
+import { EXTERNAL } from '../App/constants';
 
 const Login = (props) => {
   const { actions, intl: { formatMessage } = {}, history } = props;
@@ -25,7 +24,7 @@ const Login = (props) => {
     loginFailure(err);
   };
 
-  const isNativeApp = appType !== 'external';
+  const isNativeApp = appType !== EXTERNAL;
   return (
     <>
       <FormattedMessage {...messages.login}>
@@ -46,7 +45,7 @@ const Login = (props) => {
           signInLabel={formatMessage(messages.signIn)}
           userNameLabel={formatMessage(messages.userName)}
           passwordLabel={formatMessage(messages.password)}
-          apiEndPoint={AUTH_URL}
+          apiEndPoint={`${endpoints.arya_endpoint}/auth/login`}
           onSuccess={onSuccess}
           onFailure={onFailure}
         />
@@ -56,7 +55,7 @@ const Login = (props) => {
           <h1>Login Page</h1>
           <br/>
           <h2>
-            Since you have a custom or external app, you can create your own Login Component and render it inside Login.js. <br/>
+            Since you have a external app, you can create your own Login Component and render it inside Login.js. <br/>
             You can pass this props: signInLabel, userNameLabel, passwordLabel, onSuccess and onFailure. <br/>
             call onSuccess() when your api call succeeds and call onFailure() when your api call fails. <br/>
             Run command `npm run generate` to generate component boilerplate and render it inside Login.js.

@@ -1,14 +1,9 @@
 import { lazy } from 'react';
-const Dashboard = lazy(() => import('../Dashboard'));
+const Dashboard = lazy(() => import('../Dashboard/Loadable'));
 const LoyaltyTags = lazy(() => import('../LoyaltyTags'));
 const ExtFields = lazy(() => import('../ExtFields'));
 
 const routes = [
-  {
-    exact: true,
-    path: `/`,
-    component: Dashboard,
-  },
   {
     path: `/tags`,
     exact: true,
@@ -23,6 +18,12 @@ const routes = [
     exact: true,
     path: `/accessForbidden`,
     component: lazy(() => import('@capillarytech/vulcan-react-sdk/components/AccessForbidden')),
+  },
+  // this will be your default / home / landing page route
+  {
+    exact: true,
+    path: `/*`,
+    component: Dashboard,
   },
 ];
 

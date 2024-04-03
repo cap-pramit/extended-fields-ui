@@ -2,15 +2,17 @@ import { fromJS } from 'immutable';
 import { actionTypes } from './constants';
 import * as constants from '../App/constants';
 
+const { REQUEST, SUCCESS, FAILURE, INITIAL } = constants;
+
 const initialState = fromJS({
   currentOrgDetails: {},
   user: {},
   sidebarMenuData: [],
   topbarMenuData: [],
   fetchingUserdata: false,
-})
-
-const { REQUEST, SUCCESS, FAILURE } = constants;
+  fetchingSupportedLocales: INITIAL,
+  supportedLocales: [],
+});
 
 const capReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -61,6 +63,16 @@ const capReducer = (state = initialState, action) => {
         .set('orgID', action.currentOrgId);
     case actionTypes.GET_USER_DATA_FAILURE:
       return state.set('fetchingUserdata', FAILURE);
+    case actionTypes.GET_SUPPORTED_LOCALES_REQUEST:
+      return state.set('fetchingSupportedLocales', REQUEST);
+    case actionTypes.GET_SUPPORTED_LOCALES_SUCCESS:
+      return state
+        .set('fetchingSupportedLocales', SUCCESS)
+        .set('supportedLocales', fromJS(action.data));
+    case actionTypes.GET_SUPPORTED_LOCALES_FAILURE:
+      return state
+        .set('fetchingSupportedLocales', FAILURE)
+        .set('supportedLocales', fromJS([]));
     default:
       return state;
   }
