@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
 
-import { injectSaga, injectReducer, withStyles } from '@capillarytech/vulcan-react-sdk/utils';
+import { injectSaga, injectReducer } from '@capillarytech/vulcan-react-sdk/utils';
+import { withStyles } from '@capillarytech/vulcan-react-sdk/utils';
+
+import { Translations } from '@capillarytech/vulcan-react-sdk/components';
+const { useTranslations } = Translations;
 
 import { withRouter } from 'react-router';
 import { matchPath } from 'react-router-dom';
@@ -28,9 +32,10 @@ import * as constants from './constants';
 import * as appConstants from '../App/constants';
 import * as selectors from './selectors';
 import messages from './messages';
-import { pushDataToGTM } from '../../../utils/commonUtils';
 
-const { REQUEST, SUCCESS, FAILURE } = appConstants;
+import { prefix as prefixPath, appType, i18n, } from '../../../../app-config';
+
+const { REQUEST, SUCCESS, FAILURE, EXTERNAL } = appConstants;
 const { publicPath } = path;
 const { spinnerStyle } = style;
 const {
@@ -38,6 +43,7 @@ const {
   makeSelectCap,
   makeSelectSidebarMenuData,
   makeSelectTopbarMenuData,
+  makeSelectIsoLangToLocizeLangMapping
 } = selectors;
 const {
   HELP_URL,
@@ -62,6 +68,7 @@ export const Cap = ({
   match,
   userData,
   orgData,
+  isoLangToLocizeLangMapping,
   intl: { formatMessage },
 }) => {
   const { pathname } = location;
@@ -77,6 +84,7 @@ export const Cap = ({
   const onSettingsPage = matchedPath ? true : false;
 
   const [selectedOrgId, setSelectedOrgId] = useState(null);
+  const { locale, changeLocale } = useTranslations();
 
   useEffect(
     () => {
@@ -101,7 +109,6 @@ export const Cap = ({
       if (orgID !== undefined) {
         gtm.push({ orgID });
       }
-      pushDataToGTM('vulcan-page-load', { page: 'Dashboard' }, userData);
     },
     [refID, orgID],
   );
@@ -109,6 +116,9 @@ export const Cap = ({
   useEffect(
     () => {
       actions.getTopbarMenuData();
+      if(appType !== EXTERNAL && i18n?.useI18n) {
+        actions.getSupportedLocales();
+      }
       if (!fetchingUserdata) {
         actions.getUserData();
       }
@@ -132,12 +142,28 @@ export const Cap = ({
   };
 
   const navigateToDashboard = () => {
-    history.push("/")
+    const origin = window.location.origin;
+    window.location.href = `${origin}${prefixPath}`;
   };
 
   const logout = () => {
     loginActions.logout();
   };
+
+    //Use changeLocale exposed by useTranslations to change the locale if user's lang is different than the default specified one.
+    useEffect(() => {
+      if (appType === EXTERNAL && i18n?.useI18n) return;
+      const userIsoLang = userData?.user?.iso_lang;
+      const locizeLang = isoLangToLocizeLangMapping.get(userIsoLang);
+  
+      if (
+        userIsoLang &&
+        isoLangToLocizeLangMapping.size > 0 &&
+        locizeLang !== locale
+      ) {
+        changeLocale(locizeLang);
+      }
+    }, [userData?.user?.iso_lang, isoLangToLocizeLangMapping.size]);
 
   const onSecNavActionsClick = event => {
     if (event.key === 'close-icon') {
@@ -208,6 +234,7 @@ const mapStateToProps = createStructuredSelector({
   userData: makeSelectCap(),
   sidebarMenuData: makeSelectSidebarMenuData(),
   topbarMenuData: makeSelectTopbarMenuData(),
+  isoLangToLocizeLangMapping: makeSelectIsoLangToLocizeLangMapping(),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -54,7 +54,7 @@ export const OrgChange = ({
 
   useEffect(
     () => {
-      setShowOrgChangeModal(!!selectedOrgId);
+      setShowOrgChangeModal(!!selectedOrgId || selectedOrgId === 0);
     },
     [selectedOrgId],
   );

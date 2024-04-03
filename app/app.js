@@ -33,7 +33,7 @@ import 'file-loader?name=.htaccess!./.htaccess';
 /* eslint-enable import/no-unresolved, import/extensions */
 import loginReducer from './components/pages/Login/reducer'
 import initialState from './initialState';
-import { appName, i18n as i18nConfig } from '../app-config'
+import { appName, isHostedOnPlatform, i18n as i18nConfig } from '../app-config'
 
 VulcanSDKSetup({
   publicPath,
@@ -41,7 +41,8 @@ VulcanSDKSetup({
     translations: getLocizeMessage,
     auth: getUserData
   },
-  i18nConfig
+  i18nConfig,
+  isHostedOnPlatform,
 });
 
 const openSansObserver = new FontFaceObserver('Roboto', {});
@@ -66,6 +67,7 @@ const store = configureStore(initialState, initialReducer, history);
 const MOUNT_NODE = document.getElementById(`${appName}-container`);
 
 const render = () => {
+  // Set this to false if app is going to be part of CRM UI suite.
   localStorageApi.saveItem(`${appName}__isStandalone`, true);
   ReactDOM.render(
     <Provider store={store}>

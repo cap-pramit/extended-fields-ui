@@ -9,7 +9,7 @@ module.exports = {
     development: internalLoginUrl,
     production: appType !== 'external' &&
       process.env.NODE_ENV === 'production' &&
-      !localStorage.getItem(`${appName}__isStandalone`)
+      localStorage.getItem(`${appName}__isStandalone`) !== 'true'
       ? intouchLoginUrl
       : internalLoginUrl,
   }[process.env.NODE_ENV]),

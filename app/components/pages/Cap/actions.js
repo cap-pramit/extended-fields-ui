@@ -59,3 +59,7 @@ export const changeOrg = (orgID, successCallback) => ({
 export const getUserData = () => ({
   type: actionTypes.GET_USER_DATA_REQUEST,
 });
+
+export const getSupportedLocales = () => ({
+  type: actionTypes.GET_SUPPORTED_LOCALES_REQUEST,
+});

@@ -2,6 +2,7 @@ import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect';
 import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper';
 import { LOGIN_URL } from '../config/constants';
 import { localStorageApi } from '@capillarytech/vulcan-react-sdk/utils';
+import RedirectToLoginPage from '../components/pages/RedirectToLoginPage';
 
 const isLoggedIn = () => {
   let isLoggedIn = false;
@@ -30,17 +31,20 @@ export const userIsAuthenticated = connectedRouterRedirect({
   ...userIsAuthenticatedDefaults,
   redirectPath: LOGIN_URL,
   allowRedirectBack: false,
+  FailureComponent: RedirectToLoginPage,
 });
 
 export const userIsNotAuthenticated = connectedRouterRedirect({
-  redirectPath: "/",
+  redirectPath: '/',
   allowRedirectBack: false,
   authenticatedSelector: isNotLoggedIn,
   wrapperDisplayName: 'UserIsNotAuthenticated',
 });
 
-export const setAuthenticationDetails = res => {
-  localStorageApi.saveItem('token', res.token);
+export const setAuthenticationDetails = (res) => {
+  if (process.env.NODE_ENV === 'development') {
+    localStorageApi.saveItem('token', res.token);
+  }
   localStorageApi.saveItem('orgID', res.user.orgID);
   localStorageApi.saveItem('user', res.user);
   localStorageApi.saveItem('isLoggedIn', true);

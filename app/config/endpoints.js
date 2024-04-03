@@ -1,6 +1,5 @@
 import { endpointUtil } from "@capillarytech/vulcan-react-sdk/utils";
 import { appName, appType } from "../../app-config";
-import { EXTERNAL } from '../components/pages/App/constants'
 
 /***
  * Partial endpoints (starting with /) resolve to window.location.origin as host
@@ -8,21 +7,22 @@ import { EXTERNAL } from '../components/pages/App/constants'
  */
 
 const enviromentEndpoints = {
-  development: {
-    auth_endpoint: 'https://dev.intouch.capillarytech.com/arya/api/v1/auth',
+  // use this for storing fully qualified urls for following
+  // development mode
+  // test mode
+  // standalone mode execution of apps
+  absoluteUrls: {
+    vulcan_endpoint: 'https://dev.intouch.capillarytech.com/vulcan/api/v1',
     arya_endpoint: 'https://dev.intouch.capillarytech.com/arya/api/v1',
-    vulcan_api_endpoint: 'https://dev.intouch.capillarytech.com/vulcan/api/v1',
   },
-  production: {
-    auth_endpoint: '/arya/api/v1/auth',
+  // use this for partial urls added after current window.location.origin
+  // production mode
+  // embedded in capillary product  mode
+  partialUrls: {
+    vulcan_endpoint: '/vulcan/api/v1',
     arya_endpoint: '/arya/api/v1',
-    vulcan_api_endpoint: '/vulcan/api/v1',
   }
 }
 
-const isPartialpathAllowed =
-  appType !== EXTERNAL &&
-  localStorage.getItem(`${appName}__isStandalone`) === 'false' &&
-  process.env.NODE_ENV === 'production';
-const endpoints = endpointUtil(enviromentEndpoints, isPartialpathAllowed);
+const endpoints = endpointUtil(enviromentEndpoints, appName, appType);
 export default endpoints;

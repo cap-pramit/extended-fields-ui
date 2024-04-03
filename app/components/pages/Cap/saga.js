@@ -26,6 +26,18 @@ export function* getSidebarMenuData() {
   }
 }
 
+function* getSupportedLocales() {
+  try {
+    const res = yield call(Api.getSupportedLocales);
+    yield put({
+      type: actionTypes.GET_SUPPORTED_LOCALES_SUCCESS,
+      data: res,
+    });
+  } catch (error) {
+    yield put({ type: actionTypes.GET_SUPPORTED_LOCALES_FAILURE, error });
+  }
+}
+
 export function* getTopbarMenuData() {
   try {
     yield put({
@@ -50,36 +62,49 @@ function* switchOrg({ orgID, successCallback }) {
 export function* fetchUserInfo({ callback }) {
   try {
     const result = yield call(Api.getUserData);
-    const { currentOrgDetails, user: userData, currentOrgId } = result;
-    if (
-      !(
-        currentOrgDetails?.basic_details?.base_language !== '' ||
-        currentOrgDetails?.basic_details?.base_language === null
-      )
-    ) {
-      currentOrgDetails.basic_details.base_language = 'en';
-    }
-    if (!(currentOrgDetails?.basic_details?.supported_languages?.length > 0)) {
-      currentOrgDetails.basic_details.supported_languages = [
-        {
-          lang_id: 69,
-          language: 'English',
-          iso_code: 'en',
-        },
-      ];
-    }
+    if (result.success) {
+      const {
+        currentOrgDetails,
+        user: userData,
+        currentOrgId,
+      } = result?.result || {};
+      if (
+        !(
+          currentOrgDetails?.basic_details?.base_language !== '' ||
+          currentOrgDetails?.basic_details?.base_language === null
+        )
+      ) {
+        currentOrgDetails.basic_details.base_language = 'en';
+      }
+      if (
+        !(currentOrgDetails?.basic_details?.supported_languages?.length > 0)
+      ) {
+        currentOrgDetails.basic_details.supported_languages = [
+          {
+            lang_id: 69,
+            language: 'English',
+            iso_code: 'en',
+          },
+        ];
+      }
 
-    yield call(utilsLocalStorageApi.saveItem, 'orgID', currentOrgId);
-    yield call(utilsLocalStorageApi.saveItem, 'user', userData);
+      yield call(utilsLocalStorageApi.saveItem, 'orgID', currentOrgId);
+      yield call(utilsLocalStorageApi.saveItem, 'user', userData);
 
-    yield put({
-      type: actionTypes.GET_USER_DATA_SUCCESS,
-      userData,
-      currentOrgId,
-      currentOrgDetails,
-    });
-    if (callback) {
-      callback(userData);
+      yield put({
+        type: actionTypes.GET_USER_DATA_SUCCESS,
+        userData,
+        currentOrgId,
+        currentOrgDetails,
+      });
+      if (callback) {
+        callback(userData);
+      }
+    } else {
+      yield put({
+        type: actionTypes.GET_USER_DATA_FAILURE,
+        error: result?.message?.message,
+      });
     }
   } catch (error) {
     yield put({
@@ -109,10 +134,15 @@ function* watchForOrgChangeSuccess() {
   yield takeLatest(actionTypes.SWITCH_ORG_SUCCESS, switchOrgSuccess);
 }
 
+function* watchForGetSupportedLocales() {
+  yield takeLatest(actionTypes.GET_SUPPORTED_LOCALES_REQUEST , getSupportedLocales);
+}
+
 export default [
   watchGetSidebarMenuData,
   watchGetTopbarMenuData,
   watchForOrgChange,
   watchForFetchUserInfo,
   watchForOrgChangeSuccess,
+  watchForGetSupportedLocales,
 ];

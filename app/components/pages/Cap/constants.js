@@ -22,6 +22,9 @@ export const actionTypes = defineActionTypes(
     SWITCH_ORG_REQUEST: "SWITCH_ORG_REQUEST",
     SWITCH_ORG_SUCCESS: "SWITCH_ORG_SUCCESS",
     SWITCH_ORG_FAILURE: "SWITCH_ORG_FAILURE",
+    GET_SUPPORTED_LOCALES_REQUEST: "GET_SUPPORTED_LOCALES_REQUEST",
+    GET_SUPPORTED_LOCALES_SUCCESS: "GET_SUPPORTED_LOCALES_SUCCESS",
+    GET_SUPPORTED_LOCALES_FAILURE: "GET_SUPPORTED_LOCALES_FAILURE",
   },
   { prefix: CURRENT_APP_NAME, scope: scope },
 );
@@ -61,18 +64,13 @@ export const getSettingsMenuData = () => [
 
 export const getTopbarMenuDataValue = () => [
   {
-    label: 'Home',
-    link: '/home',
-    key: 'Home',
+    label: 'Loyalty Tags',
+    link: '/tags',
+    key: 'LoyaltyTags',
   },
   {
-    label: "Tab1",
-    link: '/',
-    key: 'programs',
-  },
-  {
-    label: "Tab2",
-    link: '/tab2/',
-    key: 'tab3',
+    label: "Extended Fields",
+    link: '/extFields',
+    key: 'ExtFields',
   },
 ];
