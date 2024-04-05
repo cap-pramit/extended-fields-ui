@@ -147,7 +147,7 @@ export const Cap = ({
   };
 
   const logout = () => {
-    loginActions.logout();
+    loginActions.logout(history);
   };
 
     //Use changeLocale exposed by useTranslations to change the locale if user's lang is different than the default specified one.

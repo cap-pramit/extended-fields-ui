@@ -1,7 +1,8 @@
 import { actionTypes } from './constants';
 
-export const logout = () => ({
+export const logout = (history) => ({
   type: actionTypes.LOGOUT_REQUEST,
+  history,
 });
 
 export const loginSuccess = res => ({

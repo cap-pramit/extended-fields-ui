@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { withRouter } from 'react-router';
+import { compose } from 'redux';
 import messages from './messages';
 import './_redirectToLoginPage.scss';
-import { loginPageUrl } from '../../../config/path';
+import redirectToLogin from '../../../utils/redirectToLogin';
 
-const originUrl = window.location.origin;
-
-const RedirectToLoginPage = () => {
+const RedirectToLoginPage = ({
+  history,
+  intl,
+}) => {
   const timeoutRef = React.useRef(null);
 
   useEffect(() => {
     timeoutRef.current = setTimeout(() => {
-      window.location.href = loginPageUrl();
+      redirectToLogin(history);
     }, 1000);
 
     return () => {
@@ -37,4 +40,6 @@ const RedirectToLoginPage = () => {
   );
 };
 
-export default RedirectToLoginPage;
+export default compose.apply(null, [
+  withRouter,
+])(injectIntl(RedirectToLoginPage));

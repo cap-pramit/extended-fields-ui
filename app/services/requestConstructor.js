@@ -30,6 +30,7 @@ function getCommonHeaders(isFileUpload, apiConfigs) {
   if (!isProd && token !== undefined) {
     headers.Authorization = `Bearer ${token}`;
   }
+
   if (get(apiConfigs, 'headers')) {
     headers = { ...headers, ...apiConfigs.headers };
   }

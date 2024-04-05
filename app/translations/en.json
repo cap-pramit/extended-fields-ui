@@ -1,4 +1,6 @@
 {
+  "loyaltyPlus.components.pages.About.header": "This is the About component!",
+  "loyaltyPlus.components.pages.Contact.header": "This is the Contact component!",
   "yourApp.components.molecules.EmptyStateIllustration.nothingConfigured": "Nothing configured till now",
   "yourApp.components.molecules.EmptyStateIllustration.nothingConfiguredDesc": "Looks like there is no data available for this program. If you think this is an error, please contact support",
   "yourApp.components.organisms.NavigationBar.logout": "Logout",

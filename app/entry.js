@@ -1,5 +1,5 @@
 import { prefix } from '../app-config'
-__webpack_public_path__ = ((new URL(((document || {}).currentScript || {}).src || window.location)).origin) + `${prefix}/`
+__webpack_public_path__ = ((new URL(((document||{}).currentScript||{}).src||window.location)).origin) + `${prefix}/`
 
 import {
   VulcanSDKSetup,
@@ -12,7 +12,7 @@ import { i18n as i18nConfig, appType } from '../app-config'
 
 VulcanSDKSetup({
   publicPath,
-  api: {
+  api:{
     translations: getLocizeMessage,
     auth: getUserData,
   },

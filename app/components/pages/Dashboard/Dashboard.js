@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { compose, bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -13,10 +14,13 @@ import { CapRow, CapColumn } from '@capillarytech/cap-ui-library'
 
 export const Dashboard = () => (
   <PageTemplate>
-    <h2>Click on links below to see the api call result.</h2>
+    <h1>Start editing your files. <br/>You have few routes available to you in routes.js for your reference.</h1>
+    <h2>This is your Dashboard page</h2>
+    <br/>
+    <br/>
+    <br/>
     <CapRow>
-      <CapColumn span={4}><Link to="/tags">Loyalty Tags</Link></CapColumn>
-      <CapColumn span={4}><Link to="/extFields">Extended Fields</Link></CapColumn>
+      <CapColumn span={4}><Link to="/home">Go to Home</Link></CapColumn>
     </CapRow>
 
   </PageTemplate>

@@ -8,7 +8,8 @@ const { SUCCESS } = appConstants;
  * Direct selector to the cap state domain
  */
 
-const selectCapDomain = (state = fromJS({})) => state.get(`${CURRENT_APP_NAME}_cap`);
+const selectCapDomain = (state = fromJS({})) =>
+  state.get(`${CURRENT_APP_NAME}_cap`);
 
 /**
  * Other specific selectors

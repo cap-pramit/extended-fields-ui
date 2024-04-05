@@ -12,8 +12,10 @@ import { localStorageApi } from '@capillarytech/vulcan-react-sdk/utils';
 import { NotFoundPage } from '@capillarytech/vulcan-react-sdk/components';
 import RenderRoute from '../../atoms/RenderRoute';
 import appConfig from '../../../../app-config';
+import { gtmInitializer } from '@capillarytech/vulcan-react-sdk/utils';
 import messages from './messages';
 import styles from './style';
+import * as path from '../../../config/path';
 import * as constants from './constants';
 import componentRoutes from '../../pages/App/routes'
 
@@ -31,6 +33,7 @@ export const NavigationBar = ({
   intl: { formatMessage = () => { } } = {},
   ...props
 }) => {
+  const isStandalone = localStorageApi.loadItem(`${appConfig.appName}__isStandalone`);
   const onTopMenuClick = ({ link }) =>
     props.history.push(link);
 
@@ -114,7 +117,7 @@ export const NavigationBar = ({
 
   return (
     <div className={className}>
-      {appConfig?.useNavigationComponent ? (
+      {isStandalone ? (
         <CapNavigation
           className={className}
           showContent
