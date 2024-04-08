@@ -8,7 +8,7 @@
  */
 import React, { useEffect} from 'react';
 import { Switch } from 'react-router-dom';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import { compose } from 'redux';
 import { ConnectedRouter } from 'connected-react-router/immutable';
 import { getHistoryInstance, injectSaga } from '@capillarytech/vulcan-react-sdk/utils';
@@ -23,6 +23,7 @@ import { NotFoundPage } from '@capillarytech/vulcan-react-sdk/components';
 import GlobalStyle from '../../../global-styles';
 
 import RenderRoute from '../../atoms/RenderRoute';
+import { LAST_VISITED_PATH, INDEX_PATH } from './constants';
 import { LOGIN_URL } from '../../../config/constants';
 import { appName, prefix } from '../../../../app-config';
 
@@ -30,42 +31,35 @@ const Protected = userIsAuthenticated(Cap);
 export const App = () => {
   const [history] = React.useState(() => getHistoryInstance());
 
-  // setting path in session storage when path changes.
-  useEffect(() => {
-    if (location.pathname !== '/index.html' ) {
-      sessionStorage.setItem(`${appName}_last_visited_path`, location.pathname);
-    } 
-  }, [location.pathname]);
-
-
-  useEffect(() => {
-
-    // getting last path from session storage and redirecting to that path.
-    const lastPath = sessionStorage.getItem(`${appName}_last_visited_path`);
-    const currentPath = window.location.pathname;
-    if (!isEmpty(lastPath) && currentPath !== `${prefix}${lastPath}`) {
-      console.log('NIKHIL pushing to history: ', lastPath);
-      history.push(lastPath);
+  // save last visited path in session
+  const lastVisitedPathFieldName = `${appName}${LAST_VISITED_PATH}`;
+  const setLastVisitedToSession = (path) => {
+    const sanitizedPath = path.replace(prefix, '');
+    // handle non-index and index paths separately
+    sessionStorage.setItem(lastVisitedPathFieldName, (sanitizedPath === INDEX_PATH ? '/' : sanitizedPath));
+  };
+  const redirectToLastVisitedPath = () => {
+    // if the page is reloaded, redirect to the last visited page using history
+    const navType = window?.performance?.navigation?.type;
+    if (!isNil(navType) && navType === window.performance.navigation.TYPE_RELOAD) {
+      const lastPath = sessionStorage.getItem(lastVisitedPathFieldName);
+      const currentPath = window.location.pathname;
+      if (!isEmpty(lastPath) && currentPath !== `${prefix}${lastPath}`) {
+        history.push(lastPath);
+      }
     }
-
-    // const handleBeforeUnload = (event) => {
-    //   console.log('NIKHIL setting data in sessionStorage: ');
-    //   if (location.pathname !== '/index.html' ) {
-    //     console.log('NIKHIL route saved in session: ', location.pathname);
-    //     // localStorageApi.saveItem(`${appName}_last_visited_path`, location.pathname);
-    //     sessionStorage.setItem(`${appName}_last_visited_path`, location.pathname);
-    //   }
-    // };
-
-    const handleCleanSessionStorage = () => {
-      console.log('NIKHIL cleaning sessionStorage');
-      sessionStorage.removeItem(`${appName}_last_visited_path`);
+  };
+  // on mount, add event handler to capture last visited path before window is unloaded
+  // on mount, redirect to last visited path if the page has been reloaded
+  useEffect(() => {
+    // record the last visited path in session storage before window is unloaded
+    const handleBeforeUnload = (event) => {
+      setLastVisitedToSession(location.pathname);
     };
-    // window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('load', handleCleanSessionStorage);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    redirectToLastVisitedPath();
     return () => {
-      // window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('load', handleCleanSessionStorage);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
