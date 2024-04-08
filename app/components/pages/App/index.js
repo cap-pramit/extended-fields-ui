@@ -6,8 +6,9 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  *
  */
-import React from 'react';
+import React, { useEffect} from 'react';
 import { Switch } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 import { compose } from 'redux';
 import { ConnectedRouter } from 'connected-react-router/immutable';
 import { getHistoryInstance, injectSaga } from '@capillarytech/vulcan-react-sdk/utils';
@@ -27,6 +28,15 @@ import { LOGIN_URL } from '../../../config/constants';
 const Protected = userIsAuthenticated(Cap);
 export const App = () => {
   const [history] = React.useState(() => getHistoryInstance());
+
+  useEffect(() => {
+    const lastPath = sessionStorage.getItem(`${appName}_last_visited_path`);
+    const currentPath = window.location.pathname;
+    if (!isEmpty(lastPath) && currentPath !== `${prefix}${lastPath}`) {
+      console.log('NIKHIL pushing to history: ', lastPath);
+      history.push(lastPath);
+    }
+  }, []);
 
   return (
     <div className={CURRENT_APP_NAME}>
