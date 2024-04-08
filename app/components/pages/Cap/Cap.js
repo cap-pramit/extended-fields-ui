@@ -79,40 +79,6 @@ export const Cap = ({
     path: `${match.path}${MODULE_NAME_URL}`,
   });
 
-  useEffect(() => {
-    console.log('********* location pathname');
-    if (location.pathname !== '/index.html' ) {
-      console.log('NIKHIL route saved in session: ', location.pathname);
-      // localStorageApi.saveItem(`${appName}_last_visited_path`, location.pathname);
-      sessionStorage.setItem(`${appName}_last_visited_path`, location.pathname);
-    } 
-    // else if (location.pathname === '/index.html') {
-    //   sessionStorage.setItem(`${appName}_last_visited_path`, '/');
-    // }
-  }, [location.pathname]);
-
-  useEffect(() => {
-    // const handleBeforeUnload = (event) => {
-    //   console.log('NIKHIL setting data in sessionStorage: ');
-    //   if (location.pathname !== '/index.html' ) {
-    //     console.log('NIKHIL route saved in session: ', location.pathname);
-    //     // localStorageApi.saveItem(`${appName}_last_visited_path`, location.pathname);
-    //     sessionStorage.setItem(`${appName}_last_visited_path`, location.pathname);
-    //   }
-    // };
-
-    const handleCleanSessionStorage = () => {
-      console.log('NIKHIL cleaning sessionStorage');
-      sessionStorage.removeItem(`${appName}_last_visited_path`);
-    };
-    // window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('load', handleCleanSessionStorage);
-    return () => {
-      // window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('load', handleCleanSessionStorage);
-    };
-  }, []);
-
   // need to handle for modules
   // const { params: { moduleName } = {} } = matchedPath || {};
   const onSettingsPage = matchedPath ? true : false;
