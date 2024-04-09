@@ -9,8 +9,9 @@
 import React from 'react';
 import { Switch } from 'react-router-dom';
 import { compose } from 'redux';
+import { appName, prefix } from '../../../../app-config';
 import { ConnectedRouter } from 'connected-react-router/immutable';
-import { getHistoryInstance, injectSaga } from '@capillarytech/vulcan-react-sdk/utils';
+import { getHistoryInstance, injectSaga, withReloadAndRedirection } from '@capillarytech/vulcan-react-sdk/utils';
 
 import { userIsAuthenticated } from '../../../utils/authWrapper';
 
@@ -48,4 +49,4 @@ const withSaga = loginSagas.map((saga, index) =>
   injectSaga({ key: `${CURRENT_APP_NAME}-login-${index}`, saga, mode: "@@saga-injector/daemon" }),
 );
 
-export default compose(...withSaga)(App);
+export default compose(...withSaga)(withReloadAndRedirection(App, { appName, prefix }));
