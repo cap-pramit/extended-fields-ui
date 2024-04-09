@@ -34,10 +34,15 @@ export const App = () => {
   // save last visited path in session
   const lastVisitedPathFieldName = `${appName}${LAST_VISITED_PATH}`;
   const historyFieldName = `${appName}${HISTORY_PATH}`;
-  const setLastVisitedToSession = (path) => {
+  const setLastVisitedToSession = path => {
     const sanitizedPath = path.replace(prefix, '');
     // handle non-index and index paths separately
-    sessionStorage.setItem(lastVisitedPathFieldName, ((isEmpty(sanitizedPath) || sanitizedPath === INDEX_PATH) ? '/' : sanitizedPath));
+    sessionStorage.setItem(
+      lastVisitedPathFieldName,
+      isEmpty(sanitizedPath) || sanitizedPath === INDEX_PATH
+        ? '/'
+        : sanitizedPath,
+    );
   };
   const redirectToLastVisitedPath = () => {
     // check type of operation done on browser
@@ -52,14 +57,18 @@ export const App = () => {
       else if (navType === window.performance.navigation.TYPE_BACK_FORWARD) {
         const str = sessionStorage.getItem(historyFieldName);
         let existingHistory = !isEmpty(str) ? JSON.parse(str) : [];
-        // extract last path from history list
-        lastPath = existingHistory.splice(existingHistory.length - 2, 2)?.[0];
+        // extract 2nd last path from history list, as last path is current path
+        existingHistory.pop();
+        lastPath = existingHistory.pop();
         // if nav history becomes empty push home route in nav history session item
         if (existingHistory.length === 0) {
           existingHistory.push('/');
         }
         // save the remaining nav history back to session
-        sessionStorage.setItem(historyFieldName, JSON.stringify(existingHistory));
+        sessionStorage.setItem(
+          historyFieldName,
+          JSON.stringify(existingHistory),
+        );
       }
       const currentPath = window.location.pathname;
       // if last path is not empty and last path is not the current path, redirect to last path
@@ -69,12 +78,22 @@ export const App = () => {
     }
   };
   // listen and collect nav history on each route change
-  const handleHistoryListener = (location) => {
+  const handleHistoryListener = location => {
     const str = sessionStorage.getItem(historyFieldName);
-    const existingHistory = !isEmpty(str) ? JSON.parse(str) : [];
+    let existingHistory = !isEmpty(str) ? JSON.parse(str) : [];
     const lastHistoryItem = existingHistory.slice(-1)?.[0];
     if (lastHistoryItem !== location.pathname) {
-      existingHistory.push(location.pathname);
+      if (location.pathname === INDEX_PATH || location.pathname === '/') {
+        existingHistory = [];
+      } else {
+        // if the browser is navigated back and forth, do not add the same path to history list
+        const pathIndex = existingHistory.indexOf(location.pathname);
+        if (pathIndex < 0) {
+          existingHistory.push(location.pathname);
+        } else {
+          existingHistory = existingHistory.slice(0, pathIndex + 1);
+        }
+      }
       sessionStorage.setItem(historyFieldName, JSON.stringify(existingHistory));
     }
   };
@@ -82,7 +101,7 @@ export const App = () => {
   // on mount, redirect to last visited path if the page has been reloaded
   useEffect(() => {
     // record the last visited path in session storage before window is unloaded
-    const handleBeforeUnload = (event) => {
+    const handleBeforeUnload = event => {
       setLastVisitedToSession(location.pathname);
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
