@@ -23,7 +23,7 @@ import { NotFoundPage } from '@capillarytech/vulcan-react-sdk/components';
 import GlobalStyle from '../../../global-styles';
 
 import RenderRoute from '../../atoms/RenderRoute';
-import { LAST_VISITED_PATH, INDEX_PATH } from './constants';
+import { LAST_VISITED_PATH, HISTORY_PATH, INDEX_PATH } from './constants';
 import { LOGIN_URL } from '../../../config/constants';
 import { appName, prefix } from '../../../../app-config';
 
@@ -33,20 +33,49 @@ export const App = () => {
 
   // save last visited path in session
   const lastVisitedPathFieldName = `${appName}${LAST_VISITED_PATH}`;
+  const historyFieldName = `${appName}${HISTORY_PATH}`;
   const setLastVisitedToSession = (path) => {
     const sanitizedPath = path.replace(prefix, '');
     // handle non-index and index paths separately
-    sessionStorage.setItem(lastVisitedPathFieldName, (sanitizedPath === INDEX_PATH ? '/' : sanitizedPath));
+    sessionStorage.setItem(lastVisitedPathFieldName, ((isEmpty(sanitizedPath) || sanitizedPath === INDEX_PATH) ? '/' : sanitizedPath));
   };
   const redirectToLastVisitedPath = () => {
-    // if the page is reloaded, redirect to the last visited page using history
+    // check type of operation done on browser
     const navType = window?.performance?.navigation?.type;
-    if (!isNil(navType) && navType === window.performance.navigation.TYPE_RELOAD) {
-      const lastPath = sessionStorage.getItem(lastVisitedPathFieldName);
+    if (!isNil(navType)) {
+      let lastPath = '';
+      // if the page is reloaded, redirect to the last visited page using last visited path session item
+      if (navType === window.performance.navigation.TYPE_RELOAD) {
+        lastPath = sessionStorage.getItem(lastVisitedPathFieldName);
+      }
+      // if the browser is navigated back and forth, redirect to the last visited page using nav history list
+      else if (navType === window.performance.navigation.TYPE_BACK_FORWARD) {
+        const str = sessionStorage.getItem(historyFieldName);
+        let existingHistory = !isEmpty(str) ? JSON.parse(str) : [];
+        // extract last path from history list
+        lastPath = existingHistory.splice(existingHistory.length - 2, 2)?.[0];
+        // if nav history becomes empty push home route in nav history session item
+        if (existingHistory.length === 0) {
+          existingHistory.push('/');
+        }
+        // save the remaining nav history back to session
+        sessionStorage.setItem(historyFieldName, JSON.stringify(existingHistory));
+      }
       const currentPath = window.location.pathname;
+      // if last path is not empty and last path is not the current path, redirect to last path
       if (!isEmpty(lastPath) && currentPath !== `${prefix}${lastPath}`) {
         history.push(lastPath);
       }
+    }
+  };
+  // listen and collect nav history on each route change
+  const handleHistoryListener = (location) => {
+    const str = sessionStorage.getItem(historyFieldName);
+    const existingHistory = !isEmpty(str) ? JSON.parse(str) : [];
+    const lastHistoryItem = existingHistory.slice(-1)?.[0];
+    if (lastHistoryItem !== location.pathname) {
+      existingHistory.push(location.pathname);
+      sessionStorage.setItem(historyFieldName, JSON.stringify(existingHistory));
     }
   };
   // on mount, add event handler to capture last visited path before window is unloaded
@@ -57,8 +86,10 @@ export const App = () => {
       setLastVisitedToSession(location.pathname);
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
+    const listener = history.listen(handleHistoryListener);
     redirectToLastVisitedPath();
     return () => {
+      listener();
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
