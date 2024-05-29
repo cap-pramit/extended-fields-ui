@@ -54,7 +54,6 @@ const ExtFields = ({
 
   return (
     <div className={className}>
-      <h1>Extended Fields with Datatype</h1>
       <CapTable
         columns={columns}
         dataSource={data}
