@@ -3,8 +3,8 @@ const Dashboard = lazy(() => import('../Dashboard/Loadable'));
 const Home = lazy(() => import('../Home/Loadable'));
 const About = lazy(() => import('../About/Loadable'));
 const Contact = lazy(() => import('../Contact/Loadable'));
-const LoyaltyTags = lazy(() => import('../LoyaltyTags'));
-const ExtFields = lazy(() => import('../ExtFields'));
+const LoyaltyTags = lazy(() => import('../LoyaltyTags/Loadable'));
+const ExtFields = lazy(() => import('../ExtFields/Loadable'));
 
 const routes = [
   {

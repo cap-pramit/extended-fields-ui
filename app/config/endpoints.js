@@ -12,8 +12,8 @@ const enviromentEndpoints = {
   // test mode
   // standalone mode execution of apps
   absoluteUrls: {
-    vulcan_endpoint: 'https://dev.intouch.capillarytech.com/vulcan/api/v1',
-    arya_endpoint: 'https://dev.intouch.capillarytech.com/arya/api/v1',
+    vulcan_endpoint: 'https://apac.intouch.capillarytech.com/vulcan/api/v1',
+    arya_endpoint: 'https://apac.intouch.capillarytech.com/arya/api/v1',
   },
   // use this for partial urls added after current window.location.origin
   // production mode

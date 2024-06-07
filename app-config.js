@@ -1,7 +1,7 @@
 module.exports = {
-  "appName": "xaja-integration-poc-new",
-  "appId": "418d268d04452fdbbfab8491",
-  "prefix": "/xaja-integration-poc-new/ui",
+  "appName": "intouch-ext-fields-ui",
+  "appId": "a83a88b023289e3793d414eb",
+  "prefix": "/extended-fields/ui",
   "isHostedOnPlatform": true,
   "appType": "global",
   "bugsnag": {
@@ -11,7 +11,7 @@ module.exports = {
   },
   "useSourceMaps": false,
   "i18n": {
-    "useI18n": false,
+    "useI18n": true,
     "customI18n": false,
     "locales": [],
     "defaultLocale": null
