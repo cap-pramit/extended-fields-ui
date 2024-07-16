@@ -78,8 +78,10 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withSaga = injectSaga({ key: 'extFields', saga });
-const withReducer = injectReducer({ key: 'extFields', reducer });
+//Do not remove your appName hash from here.
+const withReducer = injectReducer({ key: `${CURRENT_APP_NAME}-extFields`, reducer });
+//Do not remove your appName hash from here.
+const withSaga = injectSaga({ key: `${CURRENT_APP_NAME}-extFields`, saga });
 
 export default compose(
   withSaga,

@@ -97,8 +97,10 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withSaga = injectSaga({ key: 'loyaltyTags', saga });
-const withReducer = injectReducer({ key: 'loyaltyTags', reducer });
+//Do not remove your appName hash from here.
+const withReducer = injectReducer({ key: `${CURRENT_APP_NAME}-loyaltyTags`, reducer });
+//Do not remove your appName hash from here.
+const withSaga = injectSaga({ key: `${CURRENT_APP_NAME}-loyaltyTags`, saga });
 
 export default compose(
   withSaga,

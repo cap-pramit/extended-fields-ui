@@ -7,7 +7,7 @@ import { initialState } from './reducer';
  */
 
 const selectLoyaltyTagsDomain = (state = fromJS({})) =>
-  state.get('loyaltyTags', initialState);
+  state.get(`${CURRENT_APP_NAME}-loyaltyTags`, initialState);
 
 /**
  * Default selector used by loyaltyTags

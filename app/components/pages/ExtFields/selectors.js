@@ -7,7 +7,7 @@ import { initialState } from './reducer';
  */
 
 const selectExtFieldsDomain = (state = fromJS({})) =>
-  state.get('extFields', initialState);
+  state.get(`${CURRENT_APP_NAME}-extFields`, initialState);
 
 /**
  * Default selector used by extFields

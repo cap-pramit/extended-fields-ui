@@ -64,7 +64,7 @@ export const getSettingsMenuData = () => [
 
 export const getTopbarMenuDataValue = () => [
   {
-    label: 'Campaigns',
+    label: 'Loyalty Tags',
     link: '/tags',
     key: 'LoyaltyTags',
   },
