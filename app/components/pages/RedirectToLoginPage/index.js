@@ -15,7 +15,7 @@ const RedirectToLoginPage = ({
   useEffect(() => {
     timeoutRef.current = setTimeout(() => {
       redirectToLogin(history);
-    }, 1000);
+    }, 300);
 
     return () => {
       // Clear the timeout on unmount

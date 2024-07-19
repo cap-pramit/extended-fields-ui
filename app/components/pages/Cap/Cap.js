@@ -143,7 +143,7 @@ export const Cap = ({
 
   const navigateToDashboard = () => {
     const origin = window.location.origin;
-    window.location.href = `${origin}${prefixPath}`;
+    window.location.href = `${origin}${prefixPath}/`;
   };
 
   const logout = () => {

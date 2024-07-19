@@ -1,6 +1,7 @@
 import { apiCaller } from '@capillarytech/vulcan-react-sdk/utils';
 import endpoints from '../config/endpoints';
 import * as requestConstructor from './requestConstructor';
+import { IS_PROD, PROD_LOGIN_URL } from '../config/constants';
 
 const { getVulcanAPICallObject, getAryaAPICallObject } = requestConstructor;
 
@@ -8,19 +9,20 @@ function redirectIfUnauthenticated(response) {
   const { removeAuthenticationDetais } = require('../utils/authWrapper');
   const isUnauthorized = response.status === 401;
   const isLoginPage = window.location.pathname.indexOf('/login') !== -1;
-  const isAuthUserCall =
+  const isAryaAuthUserCall =
     response.url.split('auth')[1] &&
     response.url.split('auth')[1].split('?')[0] === '/user';
+  const isAuthUserCall =
+    response.url.split('/api/v1')[1] &&
+    response.url.split('/api/v1')[1].split('?')[0] === '/authenticate';
   if (isUnauthorized) {
-    // if (isProd) {
-    //   const originUrl = window.location.origin;
-    //   removeAuthenticationDetais();
-    //   //TODO: to revisit this.
-    //   // window.location = `${originUrl}${config.production.logout_url}`;
-    // } else {
-      if (isLoginPage && isAuthUserCall) return;
+    if (IS_PROD) {
       removeAuthenticationDetais();
-    // }
+      window.location.href = PROD_LOGIN_URL;
+    } else {
+      if (isLoginPage && (isAuthUserCall || isAryaAuthUserCall)) return;
+      removeAuthenticationDetais();
+    }
   }
 }
 
