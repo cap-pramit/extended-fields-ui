@@ -11,7 +11,7 @@ export const scope = 'yourApp.components.organisms.NavigationBar';
 export default defineMessages({
   selectedProductDefault: {
     id: `${scope}.selectedProductDefault`,
-    defaultMessage: 'Loyalty+',
+    defaultMessage: 'Vulcan Demo UI',
   },
   orgSettings: {
     id: `${scope}.orgSettings`,

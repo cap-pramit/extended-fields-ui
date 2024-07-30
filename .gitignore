@@ -1,4 +1,7 @@
 node_modules
+.git
+.DS_Store
+reports
 dist
 build.zip
-reports
+analysis

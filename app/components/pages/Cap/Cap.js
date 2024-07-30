@@ -5,11 +5,13 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
 
-import { injectSaga, injectReducer } from '@capillarytech/vulcan-react-sdk/utils';
+import {
+  injectSaga,
+  injectReducer,
+} from '@capillarytech/vulcan-react-sdk/utils';
 import { withStyles } from '@capillarytech/vulcan-react-sdk/utils';
 
 import { Translations } from '@capillarytech/vulcan-react-sdk/components';
-const { useTranslations } = Translations;
 
 import { withRouter } from 'react-router';
 import { matchPath } from 'react-router-dom';
@@ -33,9 +35,10 @@ import * as appConstants from '../App/constants';
 import * as selectors from './selectors';
 import messages from './messages';
 
-import { prefix as prefixPath, appType, i18n, } from '../../../../app-config';
+import { prefix as prefixPath, appType, i18n } from '../../../../app-config';
+const { useTranslations } = Translations;
 
-const { REQUEST, SUCCESS, FAILURE, EXTERNAL } = appConstants;
+const { REQUEST, SUCCESS, FAILURE, EXTERNAL, GTM_EVENTS } = appConstants;
 const { publicPath } = path;
 const { spinnerStyle } = style;
 const {
@@ -43,7 +46,7 @@ const {
   makeSelectCap,
   makeSelectSidebarMenuData,
   makeSelectTopbarMenuData,
-  makeSelectIsoLangToLocizeLangMapping
+  makeSelectIsoLangToLocizeLangMapping,
 } = selectors;
 const {
   HELP_URL,
@@ -73,7 +76,7 @@ export const Cap = ({
 }) => {
   const { pathname } = location;
   const { orgID, fetchingUserdata } = orgData;
-  const { user } = userData;
+  const { user, currentOrgDetails } = userData;
   const { refID } = user;
   const matchedPath = matchPath(pathname, {
     path: `${match.path}${MODULE_NAME_URL}`,
@@ -88,23 +91,35 @@ export const Cap = ({
 
   useEffect(
     () => {
-      const getUserGtmData = userData => {
+      const getUserGtmData = (userData, currentOrgDetails) => {
         const userName = userData?.attributes?.USERNAME;
-        const userEmail = userData?.attributes?.EMAIL;
-        const orgObj = userData?.proxyOrgList?.find(org => org.orgID === orgID);
+        const userEmail = userData?.attributes?.EMAIL ?? userName;
+        const {
+          basic_details: {
+            base_country: orgBaseCountry = '',
+            base_currency: orgBaseCurrency = '',
+            base_language: orgBaseLanguage = '',
+            name = '',
+          } = {},
+        } = currentOrgDetails;
         const gtmData = {
           orgID,
-          orgName: orgObj?.orgName,
+          orgName: name,
           userId: userData?.refID,
           userName: userName?.value,
           userEmail: userEmail?.value,
           isCapUser: userData?.isCapUser,
+          userRole: userData?.type,
+          domainName: userEmail?.value?.split('@').pop(),
+          orgBaseCountry,
+          orgBaseCurrency,
+          orgBaseLanguage,
         };
         return gtmData;
       };
       if (refID !== undefined) {
-        const userGtmData = getUserGtmData(user);
-        gtm.push(userGtmData);
+        const userGtmData = getUserGtmData(user, currentOrgDetails);
+        gtm.push({ ...userGtmData, event: GTM_EVENTS.USER_AUTHENTICATED });
       }
       if (orgID !== undefined) {
         gtm.push({ orgID });
@@ -116,9 +131,9 @@ export const Cap = ({
   useEffect(
     () => {
       actions.getTopbarMenuData();
-      if(appType !== EXTERNAL && i18n?.useI18n) {
-        actions.getSupportedLocales();
-      }
+      // if(appType !== EXTERNAL && i18n?.useI18n) {
+      //   actions.getSupportedLocales();
+      // }
       if (!fetchingUserdata) {
         actions.getUserData();
       }
@@ -150,12 +165,13 @@ export const Cap = ({
     loginActions.logout(history);
   };
 
-    //Use changeLocale exposed by useTranslations to change the locale if user's lang is different than the default specified one.
-    useEffect(() => {
+  //Use changeLocale exposed by useTranslations to change the locale if user's lang is different than the default specified one.
+  useEffect(
+    () => {
       if (appType === EXTERNAL && i18n?.useI18n) return;
       const userIsoLang = userData?.user?.iso_lang;
       const locizeLang = isoLangToLocizeLangMapping.get(userIsoLang);
-  
+
       if (
         userIsoLang &&
         isoLangToLocizeLangMapping.size > 0 &&
@@ -163,7 +179,9 @@ export const Cap = ({
       ) {
         changeLocale(locizeLang);
       }
-    }, [userData?.user?.iso_lang, isoLangToLocizeLangMapping.size]);
+    },
+    [userData?.user?.iso_lang, isoLangToLocizeLangMapping.size],
+  );
 
   const onSecNavActionsClick = event => {
     if (event.key === 'close-icon') {

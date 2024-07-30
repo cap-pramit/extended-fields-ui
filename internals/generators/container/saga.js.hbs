@@ -12,5 +12,7 @@ export function* watchForDefaultSaga() {
 }
 
 export default function*() {
-  yield all([watchForDefaultSaga()]);
+  yield all([
+    watchForDefaultSaga(),
+  ]);
 }

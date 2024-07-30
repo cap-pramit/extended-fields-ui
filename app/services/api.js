@@ -1,7 +1,9 @@
 import { apiCaller } from '@capillarytech/vulcan-react-sdk/utils';
 import endpoints from '../config/endpoints';
+import { loginPageUrl } from '../config/path';
 import * as requestConstructor from './requestConstructor';
-import { IS_PROD, PROD_LOGIN_URL } from '../config/constants';
+import { IS_PROD } from '../config/constants';
+import { appType, appName } from '../../app-config';
 
 const { getVulcanAPICallObject, getAryaAPICallObject } = requestConstructor;
 
@@ -18,7 +20,13 @@ function redirectIfUnauthenticated(response) {
   if (isUnauthorized) {
     if (IS_PROD) {
       removeAuthenticationDetais();
-      window.location.href = PROD_LOGIN_URL;
+      const isEmbedded =
+        appType !== 'external' &&
+        process.env.NODE_ENV === 'production' &&
+        localStorage.getItem(`${appName}__isStandalone`) !== 'true';
+      if (isEmbedded) {
+        window.location.href = loginPageUrl();
+      }
     } else {
       if (isLoginPage && (isAuthUserCall || isAryaAuthUserCall)) return;
       removeAuthenticationDetais();
@@ -26,12 +34,16 @@ function redirectIfUnauthenticated(response) {
   }
 }
 
-const httpRequest = apiCaller.initializeApiCaller({redirectIfUnauthenticated});
+// dummy for prepareVulcanSuccessResponseStructure function
+
+const httpRequest = apiCaller.initializeApiCaller({
+  redirectIfUnauthenticated,
+});
 
 export const getLocizeMessage = async locale => {
   const url = `${endpoints.vulcan_endpoint}/translations/${locale}`;
   return httpRequest(url, getVulcanAPICallObject('GET'));
-}
+};
 
 export const getSupportedLocales = () => {
   const url = `${endpoints.arya_endpoint}/translations/supportedLocales`;
@@ -48,23 +60,21 @@ export const changeProxyOrg = orgId => {
   return httpRequest(url, getAryaAPICallObject('Post'));
 };
 
-export const getUserData = () => {
+export const getUserData = async () => {
   const url = `${endpoints.vulcan_endpoint}/authenticate`;
   return httpRequest(url, getVulcanAPICallObject('GET'));
 };
 
-// Sample request for calling intouch api's.
-export const getCustomerData = (customerId) => {
-  const url = `${endpoints.vulcan_endpoint}/intouch/v2/customers/${customerId}`;
-  return httpRequest(url, getAryaAPICallObject('GET'));
-}
-
 export const getLoyaltyTags = () => {
-  const url = `${endpoints.vulcan_endpoint}/xaja/AjaxService/campaign_v2/get_campaign_data.json?ajax_params_1=Live&ajax_params_2=all&ajax_params_3=0&ajax_params_4=20`;
+  const url = `${
+    endpoints.vulcan_endpoint
+  }/xaja/AjaxService/campaign_v2/get_campaign_data.json?ajax_params_1=Live&ajax_params_2=all&ajax_params_3=0&ajax_params_4=20`;
   return httpRequest(url, getVulcanAPICallObject('GET'));
 };
 
 export const getExtendedFields = () => {
-  const url = `${endpoints.vulcan_endpoint}/intouch/v2/org/extendedFields?includePossibleValues=false`;
+  const url = `${
+    endpoints.vulcan_endpoint
+  }/intouch/v2/org/extendedFields?includePossibleValues=false`;
   return httpRequest(url, getVulcanAPICallObject('GET'));
 };

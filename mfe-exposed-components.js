@@ -2,9 +2,8 @@
 // Contents of this file are used in webpack config's ModuleFederationPlugin.
 //
 module.exports = {
-    // which exposes
-    // ADD MFE COMPONENT YOU WANT TO EXPORT example:
-    './LoyaltyTagsPage': '/app/components/pages/LoyaltyTags',
-    './ExtendedFieldsPage': '/app/components/pages/ExtFields',
-  };
-  
+  // which exposes
+  // ADD MFE COMPONENT YOU WANT TO EXPORT example:
+  './LoyaltyTagsList': '/app/components/pages/LoyaltyTags',
+  './ExtendedFieldsList': '/app/components/pages/ExtFields',
+};

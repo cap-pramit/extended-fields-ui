@@ -206,8 +206,8 @@ module.exports = options => ({
         ],
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2|jpg|png|gif)$/,
-        use: 'file-loader',
+        test: /\.(eot|svg|ttf|woff|woff2|jpg|png|gif|avif)$/,
+        type: 'asset/resource',
       },
       {
         test: /\.html$/,
@@ -215,12 +215,7 @@ module.exports = options => ({
       },
       {
         test: /\.(mp4|webm)$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-          },
-        },
+        type: 'asset/inline',
       },
       {
         test: /\.csv$/,

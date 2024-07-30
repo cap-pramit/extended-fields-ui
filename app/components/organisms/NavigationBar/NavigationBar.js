@@ -7,17 +7,19 @@ import { injectIntl, intlShape } from 'react-intl';
 import CapSpin from '@capillarytech/cap-ui-library/CapSpin';
 import { Switch, withRouter } from 'react-router-dom';
 import CapNavigation from '@capillarytech/cap-ui-library/CapNavigation';
-import { withStyles } from '@capillarytech/vulcan-react-sdk/utils';
-import { localStorageApi } from '@capillarytech/vulcan-react-sdk/utils';
+import {
+  withStyles,
+  localStorageApi,
+  gtmInitializer,
+} from '@capillarytech/vulcan-react-sdk/utils';
 import { NotFoundPage } from '@capillarytech/vulcan-react-sdk/components';
 import RenderRoute from '../../atoms/RenderRoute';
 import appConfig from '../../../../app-config';
-import { gtmInitializer } from '@capillarytech/vulcan-react-sdk/utils';
 import messages from './messages';
 import styles from './style';
 import * as path from '../../../config/path';
 import * as constants from './constants';
-import componentRoutes from '../../pages/App/routes'
+import componentRoutes from '../../pages/App/routes';
 
 const { DEFAULT_MODULE } = constants;
 const gtmConfig = appConfig.gtm;
@@ -30,12 +32,10 @@ export const NavigationBar = ({
   topbarMenuData = [],
   userData,
   secondaryTopBarActionHandler,
-  intl: { formatMessage = () => { } } = {},
+  intl: { formatMessage = () => {} } = {},
   ...props
 }) => {
-  const isStandalone = localStorageApi.loadItem(`${appConfig.appName}__isStandalone`);
-  const onTopMenuClick = ({ link }) =>
-    props.history.push(link);
+  const onTopMenuClick = ({ link }) => props.history.push(link);
 
   const topbarMenuDataModified = useMemo(
     () =>
@@ -117,7 +117,7 @@ export const NavigationBar = ({
 
   return (
     <div className={className}>
-      {isStandalone ? (
+      {appConfig?.useNavigationComponent ? (
         <CapNavigation
           className={className}
           showContent
@@ -131,7 +131,9 @@ export const NavigationBar = ({
           sidebarMenuData={sidebarMenuData}
           sidebarMenuItemsPosition={sidebarMenuItemsPosition}
           sidebarMenuItemClick={sidebarMenuItemClick}
-          defaultSelectedProduct={formatMessage(messages.selectedProductDefault)}
+          defaultSelectedProduct={formatMessage(
+            messages.selectedProductDefault,
+          )}
           showSecondaryTopBar={showSecondaryTopBar}
           secondaryTopBarActionHandler={secondaryTopBarActionHandler}
           skipStateForStorage
@@ -144,7 +146,7 @@ export const NavigationBar = ({
               <RenderRoute component={NotFoundPage} />
             </Switch>
           </Suspense>
-        </CapNavigation >
+        </CapNavigation>
       ) : (
         <div className="centered-div">
           <Suspense fallback={<CapSpin />}>

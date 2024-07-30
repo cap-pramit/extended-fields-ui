@@ -11,8 +11,20 @@ const SUPPORTED_APP_TYPES = [
   EXTERNAL_APP_TYPE,
   GLOBAL_APP_TYPE,
 ];
+const SUPPORTED_APP_CLUSTERS = {
+  'DEV': 'dev.intouch.capillarytech.com',
+  'NIGHTLY': 'nightly.intouch.capillarytech.com',
+  'STAGING': 'staging.intouch.capillarytech.com',
+  'IN': 'apac.intouch.capillarytech.com',
+  'SG': 'apac2.intouch.capillarytech.com',
+  'EU': 'eu.intouch.capillarytech.com',
+  'ASIA': 'asia2.intouch.capillarytech.com',
+  'TATA': 'tata.intouch.capillarytech.com',
+  'US': 'north-america.intouch.capillarytech.com',
+  'USHC': 'ushc.intouch.capillarytech.com',
+};
 
-const setup = async (appName, projectDir) => {
+const setup = async (appName, projectDir, useTDD = false) => {
   try {
     let existingConfig = {};
 
@@ -59,15 +71,23 @@ const setup = async (appName, projectDir) => {
         type: 'input',
         name: 'appId',
         message:
-          'Provide appId for your application (appId can be obtained once you have created an app on Vulcan UI platform, this is used for making api calls, you can update this later also)',
+          'Provide Vulcan application ID (this is generated when you create the app on Vulcan UI platform, it\'s used for making API calls for the app hosted on the platform, you can update this later also)',
         default: '',
         when: answers => answers.isHostedOnPlatform,
       },
       {
         type: 'input',
+        name: 'cluster',
+        message:
+          `Which cluster is this application created in? (${Object.keys(SUPPORTED_APP_CLUSTERS)?.join(', ')})`,
+        default: 'NIGHTLY',
+        when: answers => answers.isHostedOnPlatform && answers.appId,
+      },
+      {
+        type: 'input',
         name: 'appType',
         message: `Is this a ${NATIVE_APP_TYPE} or ${GLOBAL_APP_TYPE} or ${EXTERNAL_APP_TYPE} app? (This selection cannot be changed once app is created, choose native / global for Capillary apps and external for other micro-sites)`,
-        default: existingConfig.appType || EXTERNAL_APP_TYPE,
+        default: NATIVE_APP_TYPE,
         when: !existingConfig.appType, // Skip if appType is already available
         validate: input => {
           const allowedValues = SUPPORTED_APP_TYPES;
@@ -110,6 +130,16 @@ const setup = async (appName, projectDir) => {
         name: 'useI18n',
         message: 'Do you want to have internationalization support? (I18N)',
         default: false,
+      },
+      {
+        type: 'input',
+        name: 'appNames',
+        message: 'Since this app is not hosted on Vulcan UI platform, please enter the locize app names to be used in your app for I18N (comma separated):',
+        when: answers =>
+          answers.useI18n &&
+          !answers.isHostedOnPlatform &&
+          (answers.appType || existingConfig.appType) === NATIVE_APP_TYPE,
+        filter: input => input.replace(/\s/g, ''),
       },
       {
         type: 'confirm',
@@ -188,7 +218,7 @@ const setup = async (appName, projectDir) => {
         type: 'confirm',
         name: 'useNavigationComponent',
         message: 'Do you want to use Capillary Navigation Component in your project? (Top navbar with org switcher and other default blocks)',
-        default: false,
+        default: true,
         when: answers =>
           answers.appType !== EXTERNAL_APP_TYPE ||
           existingConfig.appType !== EXTERNAL_APP_TYPE,
@@ -199,6 +229,7 @@ const setup = async (appName, projectDir) => {
     const config = {
       appName,
       appId: answers.appId,
+      intouchBaseUrl: SUPPORTED_APP_CLUSTERS[answers.cluster] ?? SUPPORTED_APP_CLUSTERS['NIGHTLY'],
       prefix: `/${appName}/ui`,
       isHostedOnPlatform: answers.isHostedOnPlatform,
       appType: answers.appType || existingConfig.appType,
@@ -211,6 +242,7 @@ const setup = async (appName, projectDir) => {
       i18n: {
         useI18n: answers.useI18n,
         customI18n: answers.customI18n ?? false,
+        appNames: answers.appNames?.split(',') || [],
         locales: answers.locales?.split(',') || [],
         defaultLocale: answers.defaultLocale || null,
       },
@@ -220,6 +252,7 @@ const setup = async (appName, projectDir) => {
         projectId: answers.gtmProjectId || null,
       },
       useNavigationComponent: answers.useNavigationComponent,
+      useTestSetup: useTDD,
     };
 
     // Convert config object to JavaScript object syntax
@@ -229,7 +262,7 @@ const setup = async (appName, projectDir) => {
     fs.writeFileSync(configPath, configJS);
 
     console.log(
-      chalk.green('Configuration saved successfully to app-config.js!'),
+      chalk.green('Configuration saved successfully to app-config.js!  ✅'),
     );
     return config;
   } catch (error) {

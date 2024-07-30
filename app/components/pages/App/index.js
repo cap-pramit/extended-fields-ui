@@ -9,26 +9,31 @@
 import React from 'react';
 import { Switch } from 'react-router-dom';
 import { compose } from 'redux';
-import { appName, prefix } from '../../../../app-config';
 import { ConnectedRouter } from 'connected-react-router/immutable';
-import { getHistoryInstance, injectSaga, withReloadAndRedirection } from '@capillarytech/vulcan-react-sdk/utils';
+import {
+  getHistoryInstance,
+  injectSaga,
+  sagaInjectorTypes,
+  withReloadAndRedirection,
+} from '@capillarytech/vulcan-react-sdk/utils';
+
+import { NotFoundPage } from '@capillarytech/vulcan-react-sdk/components';
+import { appName, prefix } from '../../../../app-config';
 
 import { userIsAuthenticated } from '../../../utils/authWrapper';
+import Cap from '../Cap/Loadable';
 
-import Cap from '../Cap';
-import Login from '../Login';
+import Login from '../Login/Loadable';
 import loginSagas from '../Login/saga';
-import { NotFoundPage } from '@capillarytech/vulcan-react-sdk/components';
 
 import GlobalStyle from '../../../global-styles';
 
 import RenderRoute from '../../atoms/RenderRoute';
 import { LOGIN_URL } from '../../../config/constants';
-
 const Protected = userIsAuthenticated(Cap);
+
 export const App = () => {
   const [history] = React.useState(() => getHistoryInstance());
-
   return (
     <div className={CURRENT_APP_NAME}>
       <ConnectedRouter history={history}>
@@ -44,9 +49,14 @@ export const App = () => {
 };
 
 //Logout saga's should be injected at all times even if login page is unmounted. Hence daemon mode
-//todo move to constant later.
 const withSaga = loginSagas.map((saga, index) =>
-  injectSaga({ key: `${CURRENT_APP_NAME}-login-${index}`, saga, mode: "@@saga-injector/daemon" }),
+  injectSaga({
+    key: `${CURRENT_APP_NAME}-login-${index}`,
+    saga,
+    mode: sagaInjectorTypes.DAEMON,
+  }),
 );
 
-export default compose(...withSaga)(withReloadAndRedirection(App, { appName, prefix }));
+export default compose(...withSaga)(
+  withReloadAndRedirection(App, { appName, prefix }),
+);

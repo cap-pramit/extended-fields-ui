@@ -1,13 +1,9 @@
-import {
-  call,
-  put,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import * as Api from '../../../services/api';
 import { actionTypes } from './constants';
 import {
-setAuthenticationDetails,
-removeAuthenticationDetais,
+  setAuthenticationDetails,
+  removeAuthenticationDetais,
 } from '../../../utils/authWrapper';
 import redirectToLogin from '../../../utils/redirectToLogin';
 
@@ -30,7 +26,7 @@ function* loginSuccess({ res }) {
 function* logoutSuccess() {
   removeAuthenticationDetais();
 }
-  
+
 function* watchForLogoutFlow() {
   yield takeLatest(actionTypes.LOGOUT_REQUEST, logoutFlow);
 }
@@ -42,8 +38,6 @@ function* watchForLoginSuccess() {
 function* watchForLogoutSuccess() {
   yield takeLatest(actionTypes.LOGOUT_SUCCESS, logoutSuccess);
 }
-
-
 
 export default [
   watchForLogoutFlow,

@@ -60,7 +60,6 @@ export function getAPICallObject(method, body, options = {}) {
         }
         headers['x-cap-vulcan-app-id'] = appId;
       }
-      //TODO: add x-cap-vulcan-app-env header if needed
       break;
     // Add more cases as needed for different types
     default:

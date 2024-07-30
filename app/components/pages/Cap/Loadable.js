@@ -1,7 +1,13 @@
-import React, { lazy, Suspense } from 'react';
-import CapSpin from '@capillarytech/cap-ui-library/CapSpin';
+/**
+ *
+ * Asynchronously loads the component for Contact
+ *
+ */
 
-const LoadableComponent = lazy(() => import('./Cap'));
+import React, { Suspense } from 'react';
+import { loadable } from '@capillarytech/cap-ui-utils';
+import CapSpin from '@capillarytech/cap-ui-library/CapSpin';
+const LoadableComponent = loadable(() => import('./Cap'));
 
 export default () => (
   <Suspense fallback={<CapSpin />}>

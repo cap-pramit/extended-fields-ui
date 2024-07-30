@@ -3,6 +3,7 @@
  */
 
 const componentExists = require('../utils/componentExists');
+const { useTestSetup } = require('../../../app-config');
 
 module.exports = {
   description: 'Add a Stateful functional component',
@@ -93,12 +94,6 @@ module.exports = {
         templateFile: indexTemplate,
         abortOnFail: true,
       },
-      {
-        type: 'add',
-        path: `${path}/tests/index.test.js`,
-        templateFile: testTemplate,
-        abortOnFail: true,
-      },
       // {
       //   type: 'add',
       //   path: `${path}/stories/{{properCase name}}.stories.js`,
@@ -106,6 +101,15 @@ module.exports = {
       //   abortOnFail: true,
       // },
     ];
+
+    if (useTestSetup) {
+      actions.push({
+        type: 'add',
+        path: `${path}/tests/index.test.js`,
+        templateFile: testTemplate,
+        abortOnFail: true,
+      });
+    }
 
     // If component wants messages
     if (data.wantMessages) {
@@ -127,12 +131,14 @@ module.exports = {
         templateFile: actionsTemplate,
         abortOnFail: true,
       });
-      actions.push({
-        type: 'add',
-        path: `${path}/tests/actions.test.js`,
-        templateFile: actionsTestTemplate,
-        abortOnFail: true,
-      });
+      if (useTestSetup) {
+        actions.push({
+          type: 'add',
+          path: `${path}/tests/actions.test.js`,
+          templateFile: actionsTestTemplate,
+          abortOnFail: true,
+        });
+      }
 
       // Constants
       actions.push({
@@ -149,12 +155,14 @@ module.exports = {
         templateFile: selectorsTemplate,
         abortOnFail: true,
       });
-      actions.push({
-        type: 'add',
-        path: `${path}/tests/selectors.test.js`,
-        templateFile: selectorsTestTemplate,
-        abortOnFail: true,
-      });
+      if (useTestSetup) {
+        actions.push({
+          type: 'add',
+          path: `${path}/tests/selectors.test.js`,
+          templateFile: selectorsTestTemplate,
+          abortOnFail: true,
+        });
+      }
 
       // Reducer
       actions.push({
@@ -163,12 +171,14 @@ module.exports = {
         templateFile: reducerTemplate,
         abortOnFail: true,
       });
-      actions.push({
-        type: 'add',
-        path: `${path}/tests/reducer.test.js`,
-        templateFile: reducerTestTemplate,
-        abortOnFail: true,
-      });
+      if (useTestSetup) {
+        actions.push({
+          type: 'add',
+          path: `${path}/tests/reducer.test.js`,
+          templateFile: reducerTestTemplate,
+          abortOnFail: true,
+        });
+      }
     }
 
     // Sagas
@@ -179,12 +189,14 @@ module.exports = {
         templateFile: sagaTemplete,
         abortOnFail: true,
       });
-      actions.push({
-        type: 'add',
-        path: `${path}/tests/saga.test.js`,
-        templateFile: sagaTestTemplate,
-        abortOnFail: true,
-      });
+      if (useTestSetup) {
+        actions.push({
+          type: 'add',
+          path: `${path}/tests/saga.test.js`,
+          templateFile: sagaTestTemplate,
+          abortOnFail: true,
+        });
+      }
     }
 
     if (data.wantLoadable) {

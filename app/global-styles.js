@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', Arial, sans-serif;
   }
 
-  #intouch-ext-fields-ui-container {
+  #extended-fields-ui-container {
     min-height: 100%;
     min-width: 100%;
   }
@@ -28,7 +28,7 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.5em;
   }
 
-  .intouch-ext-fields-ui-body {
+  .extended-fields-ui-body {
     .ant-popover,
     .ant-select-dropdown,
     .ant-select-dropdown.ant-select-dropdown--single,

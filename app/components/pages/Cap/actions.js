@@ -1,19 +1,5 @@
 import { actionTypes } from './constants';
 
-export const logout = () => ({
-  type: actionTypes.LOGOUT_REQUEST,
-});
-
-export const loginSuccess = res => ({
-  type: actionTypes.LOGIN_SUCCESS,
-  res,
-});
-
-export const loginFailure = error => ({
-  type: actionTypes.LOGIN_FAILURE,
-  error,
-});
-
 export const getSidebarMenuData = () => ({
   type: actionTypes.GET_SIDEBAR_MENU_DATA_REQUEST,
 });

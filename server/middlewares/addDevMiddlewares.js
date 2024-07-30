@@ -22,7 +22,7 @@ module.exports = function addDevMiddlewares(app, webpackConfig) {
 
   // Since webpackDevMiddleware uses memory-fs internally to store build
   // artifacts, we use it instead
-  const fs = middleware.context.outputFileSystem;
+  const fs = middleware.context.outputFileSystem; // REACT-18 Upgrade: When using Webpack Dev Middleware (typically with Webpack Dev Server), Webpack needs a way to serve the built files to the browser. Instead of writing these files to disk, which can be slow, Webpack can use an in-memory file system.
 
   app.get('*', (req, res) => {
     fs.readFile(path.join(compiler.outputPath, 'index.html'), (err, file) => {

@@ -2,11 +2,10 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin; //eslint-disable-line
-const CompressionPlugin = require('brotli-webpack-plugin');
-const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+const { ESBuildPlugin } = require('esbuild-loader');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; //eslint-disable-line
+// const CompressionPlugin = require('brotli-webpack-plugin');
+// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 
 const appConfig = require('../../app-config');
 
@@ -16,7 +15,7 @@ const sanitizedMFEChunkName = `${sanitizeAppName(appConfig.appName)}_MFE`;
 
 const bundleAnalyzerEnabled = process.env.ANALYZE === 'true';
 
-bundleAnalyzer = [];
+const bundleAnalyzer = [];
 
 // enable when build steps analysis is required to see which steps n plugins take more time
 // const smp = new SpeedMeasurePlugin({
@@ -59,11 +58,14 @@ module.exports =
     stats: {
       warnings: false,
       children: false,
+      optimizationBailout: true, //REACT-18 Upgrade: replacement if --display-optimization-bailout in webpack 5
+      modules: false, // REACT-18 Upgrade: replacement of --hide-modules in webpack 5
     },
     optimization: {
+      moduleIds: 'named', // REACT-18 Upgrade: replacement of namedModules in webpack 5
       minimize: true,
       minimizer: [
-        new ESBuildMinifyPlugin({
+        new ESBuildPlugin({
           target: 'es2015', // Syntax to compile to (see options below for possible values)
         }),
       ],
@@ -72,12 +74,32 @@ module.exports =
       concatenateModules: true,
       splitChunks: {
         cacheGroups: {
-          defaultVendors: {
-            name: `chunk-vendors`,
+          vendor: {
             test: /[\\/]node_modules[\\/]/,
-            priority: -10,
-            chunks: 'async',
+            name(module) {
+              const packageName = module.context.match(
+                /[\\/]node_modules[\\/](.*?)([\\/]|$)/,
+              )[1];
+              if (packageName.includes('capillarytech')) {
+                const packageNameMatch = module.context.match(
+                  /[\\/]node_modules[\\/]@capillarytech[\\/](.*?)([\\/]|$)/
+                );
+                // Check if there's a match specific to '@capillarytech' scoped packages
+                if ( packageNameMatch[1]) {
+                  const packageNamed = packageNameMatch[1];
+                  return `lib.capillarytech.${packageNamed}`;
+                } else {
+                  return `lib.capillarytech`;
+                }
+              }
+              return `vendor.${packageName.replace('@', '')}`;
+            },
+          },
+          main: {
+            chunks: 'all',
+            minChunks: 5,
             reuseExistingChunk: true,
+            enforce: true,
           },
           common: {
             name: `chunk-common`,

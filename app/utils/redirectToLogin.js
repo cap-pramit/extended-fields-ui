@@ -1,12 +1,12 @@
-import { EXTERNAL } from "../components/pages/App/constants";
-import { loginPageUrl } from "../config/path";
+import { EXTERNAL } from '../components/pages/App/constants';
+import { loginPageUrl } from '../config/path';
 import { prefix, appType, appName } from '../../app-config';
 
-const redirectToLogin = (history) => {
+const redirectToLogin = history => {
   const loginStateUrl = loginPageUrl();
-  const isEmbedded = 
-    appType !== EXTERNAL && 
-    process.env.NODE_ENV === 'production' && 
+  const isEmbedded =
+    appType !== EXTERNAL &&
+    process.env.NODE_ENV === 'production' &&
     localStorage.getItem(`${appName}__isStandalone`) !== 'true';
   if (isEmbedded) {
     // changing window location href as app is embedded in Intouch UI

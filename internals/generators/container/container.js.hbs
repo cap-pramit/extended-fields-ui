@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 {{/if}}
 {{#if wantMessages}}
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 {{/if}}
 {{#if wantActionsAndReducer}}
 import { createStructuredSelector } from 'reselect';
@@ -35,8 +35,11 @@ import messages from './messages';
 {{/if}}
 
 function {{ properCase name }}(props) {
+  {{#if wantMessages}}
+  const { intl: { formatMessage } } = props;
+  {{/if}}
   {{#if wantActionsAndReducer}}
-  const {actions} = props;
+  const { actions } = props;
   {{/if}}
 
   return (
@@ -49,12 +52,17 @@ function {{ properCase name }}(props) {
     {{/if}}
     {{#if wantMessages}}
       <FormattedMessage {...messages.header} />
+      <h3>{formatMessage(messages.header)}</h3>
     {{/if}}
     </div>
   );
 }
 
-{{ properCase name }}.propTypes = {};
+{{ properCase name }}.propTypes = {
+  {{#if wantMessages}}
+  intl: intlShape.isRequired,
+  {{/if}}
+};
 
 {{#if wantActionsAndReducer}}
 const mapStateToProps = createStructuredSelector({
@@ -89,5 +97,4 @@ export default compose(
   withSaga,
 {{/if}}
   withConnect,
-)(clearDataOnUnmount({{ properCase name }}));
-
+){{#if wantMessages}}(injectIntl{{/if}}(clearDataOnUnmount({{ properCase name }}, "clearData")){{#if wantMessages}}){{/if}};

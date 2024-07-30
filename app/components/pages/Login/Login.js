@@ -9,26 +9,23 @@ import endpoints from '../../../config/endpoints';
 import * as actions from './actions';
 import messages from './messages';
 import { userIsNotAuthenticated } from '../../../utils/authWrapper';
-import { appType } from '../../../../app-config';
 import PageTemplate from '../../templates/PageTemplate';
-import { EXTERNAL } from '../App/constants';
 
-const Login = (props) => {
+const Login = props => {
   const { actions, intl: { formatMessage } = {}, history } = props;
   const { loginSuccess, loginFailure } = actions;
-  const onSuccess = (response) => {
+  const onSuccess = response => {
     loginSuccess(response);
     history.push('/');
   };
-  const onFailure = (err) => {
+  const onFailure = err => {
     loginFailure(err);
   };
 
-  const isNativeApp = appType !== EXTERNAL;
   return (
     <>
       <FormattedMessage {...messages.login}>
-        {(message) => (
+        {message => (
           <Helmet
             title={message}
             meta={[
@@ -40,38 +37,26 @@ const Login = (props) => {
           />
         )}
       </FormattedMessage>
-      {isNativeApp ? (
-        <InternalIntouchLogin
-          signInLabel={formatMessage(messages.signIn)}
-          userNameLabel={formatMessage(messages.userName)}
-          passwordLabel={formatMessage(messages.password)}
-          apiEndPoint={`${endpoints.arya_endpoint}/auth/login`}
-          onSuccess={onSuccess}
-          onFailure={onFailure}
-        />
-      ) : (
-        <PageTemplate>
-          <br/>
-          <h1>Login Page</h1>
-          <br/>
-          <h2>
-            Since you have a external app, you can create your own Login Component and render it inside Login.js. <br/>
-            You can pass this props: signInLabel, userNameLabel, passwordLabel, onSuccess and onFailure. <br/>
-            call onSuccess() when your api call succeeds and call onFailure() when your api call fails. <br/>
-            Run command `npm run generate` to generate component boilerplate and render it inside Login.js.
-          </h2>
-        </PageTemplate>
-
-      )}
+      <InternalIntouchLogin
+        signInLabel={formatMessage(messages.signIn)}
+        userNameLabel={formatMessage(messages.userName)}
+        passwordLabel={formatMessage(messages.password)}
+        apiEndPoint={`${endpoints.arya_endpoint}/auth/login`}
+        onSuccess={onSuccess}
+        onFailure={onFailure}
+      />
     </>
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-const withConnect = connect(null, mapDispatchToProps);
+const withConnect = connect(
+  null,
+  mapDispatchToProps,
+);
 
 export default compose.apply(null, [
   withRouter,

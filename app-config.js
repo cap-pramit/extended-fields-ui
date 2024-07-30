@@ -1,25 +1,28 @@
 module.exports = {
-  "appName": "intouch-ext-fields-ui",
-  "appId": "a83a88b023289e3793d414eb",
-  "prefix": "/extended-fields/ui",
-  "isHostedOnPlatform": true,
-  "appType": "global",
-  "bugsnag": {
-    "useBugsnag": false,
-    "apiKey": null,
-    "retainSourceMaps": false
+  appName: 'extended-fields-ui',
+  appId: 'd200914db79110f92b1d9b8d',
+  intouchBaseUrl: 'eu.intouch.capillarytech.com',
+  prefix: '/extended-fields/demo/ui',
+  isHostedOnPlatform: true,
+  appType: 'native',
+  bugsnag: {
+    useBugsnag: false,
+    apiKey: null,
+    retainSourceMaps: false,
   },
-  "useSourceMaps": false,
-  "i18n": {
-    "useI18n": true,
-    "customI18n": false,
-    "locales": [],
-    "defaultLocale": null
+  useSourceMaps: false,
+  i18n: {
+    useI18n: true,
+    customI18n: false,
+    appNames: [],
+    locales: [],
+    defaultLocale: null,
   },
-  "gtm": {
-    "useGTM": false,
-    "trackingId": null,
-    "projectId": null
+  gtm: {
+    useGTM: false,
+    trackingId: null,
+    projectId: null,
   },
-  "useNavigationComponent": false
+  useNavigationComponent: true,
+  useTestSetup: false,
 };
